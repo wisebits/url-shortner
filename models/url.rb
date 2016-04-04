@@ -1,4 +1,4 @@
-require 'json' 
+require 'json'
 
 # properties of a short url
 class ShortUrl
