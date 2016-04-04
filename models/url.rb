@@ -1,8 +1,8 @@
-require 'json'
+require 'json' 
 
 # properties of a short url
 class ShortUrl
-	STORE_DIR = 'db/'.freeze
+    STORE_DIR = 'db/'.freeze
 
 	attr_accessor :id, :url, :title, :description, :public
 

@@ -1,11 +1,11 @@
-require 'sinatra' 
+require 'sinatra'
 require 'json'
 require 'base64'
 require_relative 'models/url'
 
 # url shortner web application
 class UrlShortnerAPI < Sinatra::Base
-	before do 
+	before do
 		ShortUrl.setup
 	end
 
