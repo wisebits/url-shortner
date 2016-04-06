@@ -8,6 +8,24 @@ An URL shortner is a service that basically renders a shorter url for the one be
 > rackup
 ```
 
+## Usage as of April 6th 2016
+
+- GET /
+  - DESCRIPTION => Home of API Service
+
+- GET /api/v1/urls/
+  - RETURNS => JSON
+  - DESCRIPTION => Returns all saved URL details
+
+- GET /api/v1/urls/:id.json
+  - RETURNS => JSON
+  - DESCRIPTION => Returns specified URL details
+
+- POST /api/v1/urls/
+  - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d 
+  "{\"link\": \"http://test.com\", \"title\": \"urltest\", \"description\": \"urltest\", \"public\": \"urltest\" }" \http://localhost:9292/api/v1/urls
+
+
 ## Contributors
 * Nicole Weatherburne
 * Elvis Saravia
