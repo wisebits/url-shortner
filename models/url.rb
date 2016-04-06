@@ -7,7 +7,7 @@ class ShortUrl
   attr_accessor :id, :url, :title, :description, :public
 
   def initialize(new_url)
-    @id = new_url['id'] # id of a url
+    @id = new_url['id'] || new_id # id of a url
     @link = new_url['link'] # url link
     @title = new_url['title'] # title of url
     @description = new_url['description'] # additional information for url
@@ -31,6 +31,16 @@ class ShortUrl
         description: @description,
         public: @public },
       options)
+  end
+
+  def new_id
+    Base64.urlsafe_encode64(Digest::SHA256.digest(Time.now.to_s))
+  end
+
+  def save
+    File.open(STORE_DIR + @id + '.txt', 'w') do |file|
+      file.write(to_json)
+    end
   end
 
   def self.find(find_id)
