@@ -1,4 +1,4 @@
-require 'json' 
+require 'json'
 
 # properties of a short url
 class ShortUrl
@@ -26,11 +26,11 @@ class ShortUrl
 
   def to_json(options = {})
     JSON({ id: @id,
-        link: @link,
-        title: @title,
-        description: @description,
-        public: @public },
-      options)
+           link: @link,
+           title: @title,
+           description: @description,
+           public: @public },
+         options)
   end
 
   def new_id
