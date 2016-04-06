@@ -3,6 +3,8 @@ GEM
   specs:
     daemons (1.2.3)
     eventmachine (1.2.0.1)
+    haml (4.0.7)
+      tilt
     json (1.8.3)
     rack (1.6.4)
     rack-protection (1.5.3)
@@ -21,6 +23,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  haml
   json
   sinatra
   thin

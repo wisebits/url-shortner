@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'json'
+require 'haml'
 require 'base64'
 require_relative 'models/url'
 
@@ -10,7 +11,7 @@ class UrlShortnerAPI < Sinatra::Base
   end
 
   get '/?' do
-    'Hello, World!'
+    haml :index
   end
 
   get '/api/v1/urls/?' do
