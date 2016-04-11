@@ -3,6 +3,7 @@ require 'json'
 require 'haml'
 require 'base64'
 require 'uri'
+require_relative 'config/environments'
 require_relative 'models/url'
 
 # url shortner web application
