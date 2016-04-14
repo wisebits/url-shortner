@@ -2,7 +2,7 @@ require 'sequel'
 
 Sequel.migration do	
 	change do
-		create_table(:privacies) do
+		create_table(:permissions) do
 			primary_key :id
 			foreign_key :url_id
 			foreign_key :user_id
