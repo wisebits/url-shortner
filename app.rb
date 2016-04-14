@@ -1,14 +1,21 @@
 require 'sinatra'
 require 'json'
 require 'haml'
+require 'openssl'
 require 'base64'
 require 'uri'
-require_relative 'models/url'
+require_relative 'config/environments'
+require_relative 'models/init'
+require_relative './helpers/api_helper.rb'
 
 # url shortner web application
 class UrlShortnerAPI < Sinatra::Base
+
+  helpers ApiHelper
+
   before do
-    ShortUrl.setup
+    host_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
+    @request_url = URI.join(host_url, request.path.to_s)
   end
 
   get '/?' do
@@ -17,29 +24,41 @@ class UrlShortnerAPI < Sinatra::Base
 
   get '/api/v1/urls/?' do
     content_type 'application/json'
-    id_list = ShortUrl.all
-    { url_id: id_list }.to_json
+    JSON.pretty_generate(data: Url.all)
   end
 
   get '/api/v1/urls/:id/*' do
-    content_type 'text/plain'
+    content_type 'application/json'
+    
     begin
+      id = params['id']
       attribute = params['splat'][0]
-      ShortUrl.find(params[:id]).instance_variable_get("@#{attribute}")
-    rescue => e
-      status 404
+      url = Url.where(id: id).first.values#.first.instance_variable_get("@#{attribute}")
+      halt(404, 'Url not found') unless url
+      JSON.pretty_generate(data: {
+          url_id: url[:id],
+          "#{attribute}": url[:"#{attribute}"]
+        })
+    rescue
+      status 400
+      logger.info "FAILED to process GET attribute for id: #{id}"
       e.inspect
     end
+
   end
 
-  get '/api/v1/urls/:id.json' do
+  get '/api/v1/urls/:id' do
     content_type 'application/json'
-    begin
-      { url_details: ShortUrl.find(params[:id]) }.to_json
-    rescue => e
-      status 404
-      logger.info "FAILED to GET url: #{e.inspect}"
+
+    id = params[:id]
+    url = Url[id]
+
+    if url
+      JSON.pretty_generate(data: url)
+    else
+      halt 404, "Url not found: #{id}"
     end
+    
   end
 
   post '/api/v1/urls/?' do
@@ -47,17 +66,19 @@ class UrlShortnerAPI < Sinatra::Base
 
     begin
       new_data = JSON.parse(request.body.read)
-      new_url_data = ShortUrl.new(new_data)
-      if new_url_data.save
-        logger.info "NEW URL STORED: #{new_url_data.id}"
-      else
-        halt 400, "Could not store url details: #{new_url_data}"
-      end
+      full_url = new_data["full_url"]
+      new_data["short_url"] = short_url_creator(full_url)
+      puts new_data["short_url"]
+      saved_url = Url.create(new_data)
 
-      redirect 'api/v1/urls/' + new_url_data.id + '.json'
     rescue => e
-      status 400
-      logger.info "Failed to create new url: #{e}"
+      logger.info "Failed to create new url: #{e.inspect}"
+      halt 400
     end
+
+    new_location = URI.join(@request_url.to_s + '/', saved_url.id.to_s).to_s
+    status 201
+
+    headers('Location' => new_location)
   end
 end
