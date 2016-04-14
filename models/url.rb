@@ -9,6 +9,7 @@ class Url < Sequel::Model
 
   many_to_one :users
   one_to_many :privacies
+  one_to_many :views
 
   def to_json(options = {})
     JSON({  type: 'url',
