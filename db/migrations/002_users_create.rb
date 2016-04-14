@@ -8,7 +8,8 @@ Sequel.migration do
 			String :email, unique: true, null: false
 			String :password, unique: true, null: false
 			String :account_status, unique: true, null: false
-			DateTime :date_created, unique: true, null: false
+			DateTime :created_at
+			DateTime :updated_at
 		end
 	end
 end
