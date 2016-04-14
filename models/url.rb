@@ -12,13 +12,17 @@ class Url < Sequel::Model
     JSON({  type: 'url',
             id: id,
             data: {
-              link: link,
+              full_url: full_url,
               title: title,
               description: description,
-              short_url: short_url,
+              short_url: short_url_creator(full_url),
               date_created: date_created
             }
           },
           options)
+  end
+
+  def short_url_creator(full_url)
+    "http://wise.url/"+ Base64.urlsafe_encode64(Digest::SHA256.digest(full_url))[0..6]
   end
 end
