@@ -24,6 +24,7 @@ class Url < Sequel::Model
           options)
   end
 
+  # TODO: need to fix this function to work automatically
   def short_url_creator(full_url)
     "http://wise.url/"+ Base64.urlsafe_encode64(Digest::SHA256.digest(full_url))[0..6]
   end

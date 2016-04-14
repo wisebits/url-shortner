@@ -22,8 +22,7 @@ An URL shortner is a service that basically renders a shorter url for the one be
   - DESCRIPTION => Returns specified URL details
 
 - POST /api/v1/urls/
-  - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d 
-  "{\"link\": \"http://test.com\", \"title\": \"urltest\", \"description\": \"urltest\", \"public\": \"urltest\" }" \http://localhost:9292/api/v1/urls
+  - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"full_url\": \"http://test.com\", \"title\": \"urltest\", \"description\": \"urltest\", \"short_url\": \"testing.com \" }" \http://localhost:9292/api/v1/urls
 
 ## Tux helpful commands
 ``` 
