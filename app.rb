@@ -40,9 +40,7 @@ class UrlShortnerAPI < Sinatra::Base
           "#{attribute}": url[:"#{attribute}"]
         })
     rescue
-      status 400
-      logger.info "FAILED to process GET attribute for id: #{id}"
-      e.inspect
+      halt 404, "Url not found with id: #{id}"
     end
 
   end
