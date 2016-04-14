@@ -8,7 +8,7 @@ class Url < Sequel::Model
   plugin :timestamps, :create=>:created_at, :update=>:updated_at
 
   many_to_one :users
-  one_to_many :privacies
+  one_to_many :permissions
   one_to_many :views
 
   def to_json(options = {})
