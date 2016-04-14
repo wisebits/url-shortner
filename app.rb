@@ -9,7 +9,8 @@ require_relative 'models/init'
 # url shortner web application
 class UrlShortnerAPI < Sinatra::Base
   before do
-    #Url.setup
+    host_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
+    @request_url = URI.join(host_url, request.path.to_s)
   end
 
   get '/?' do
@@ -60,10 +61,15 @@ class UrlShortnerAPI < Sinatra::Base
 
     begin
       new_data = JSON.parse(request.body.read)
-      new_url_data = Url.create(new_data)
+      saved_url = Url.create(new_data)
     rescue => e
       logger.info "Failed to create new url: #{e.inspect}"
       halt 400
     end
+
+    new_location = URI.join(@request_url.to_s + '/', saved_url.id.to_s).to_s
+    status 201
+
+    headers('Location' => new_location)
   end
 end
