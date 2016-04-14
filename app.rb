@@ -4,7 +4,7 @@ require 'haml'
 require 'base64'
 require 'uri'
 require_relative 'config/environments'
-require_relative 'models/url'
+require_relative 'models/init'
 
 # url shortner web application
 class UrlShortnerAPI < Sinatra::Base
@@ -18,8 +18,7 @@ class UrlShortnerAPI < Sinatra::Base
 
   get '/api/v1/urls/?' do
     content_type 'application/json'
-    id_list = ShortUrl.all
-    { url_id: id_list }.to_json
+    JSON.pretty_generate(data: Url.all)
   end
 
   get '/api/v1/urls/:id/*' do
