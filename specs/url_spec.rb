@@ -13,8 +13,8 @@ describe 'URL resource calls' do
       req_header = { 'CONTENT_TYPE' => 'application/json' }
       req_body = { title: 'test', full_url: 'http://test.com', short_url: 'http://wisebits/bfdd' }.to_json
       new_url = Url.new(title: 'test23')
-      new_url.full_url = 'http://test23.com'
-      new_url.short_url = 'http://wisebits/bfdd23'
+      new_url.url = 'http://test23.com'
+      new_url.shorturl = new_url.url
       new_url.save
 
       #post '/api/v1/urls/', req_body, req_header
@@ -36,7 +36,7 @@ describe 'URL resource calls' do
     it 'HAPPY: should find an existing URL' do
       new_url = Url.new(title: 'test23')
       new_url.url = 'http://test23.com'
-      new_url.short_url = 'http://wisebits/bfdd23'
+      new_url.shorturl = new_url.url
       new_url.save
 
       get "/api/v1/urls/#{new_url.id}"
@@ -57,7 +57,7 @@ describe 'URL resource calls' do
       (1..5).each do |i|
         new_url = Url.new(title: 'test')
         new_url.url = "http://test#{i}.com"
-        new_url.short_url =  "http://wisebits/bfdd#{i}"
+        new_url.shorturl =  new_url.url
         new_url.save
       end 
 
