@@ -4,14 +4,14 @@ Sequel.migration do
   change do
     create_table(:urls) do
       primary_key	:id
-      foreign_key		:user_id
-
-      Sequel::Model.plugin :timestamps
+      foreign_key	:user_id
 
       String	:full_url, unique: true, null: false
       String	:short_url, unique: true, null: false, default: ''
       String	:title, null: false
+      Integer :size
       String	:description
+      String  :nonce
       DateTime	:created_at
       DateTime	:updated_at
     end
