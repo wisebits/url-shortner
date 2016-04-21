@@ -7,6 +7,7 @@ gem 'json'
 gem 'haml'
 gem 'sequel'
 gem 'sqlite3'
+gem 'rbnacl-libsodium'
 
 group :development do
   gem 'rerun'
@@ -19,4 +20,8 @@ group :test do
   gem 'rack'
   gem 'rack-test'
   gem 'rake'
+end
+
+group :development, :test do
+  gem 'config_env'
 end

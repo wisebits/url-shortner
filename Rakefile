@@ -1,4 +1,7 @@
 require './app'
+require 'rake/testtask'
+
+task :default => [:spec]
 
 namespace :db do
 	require 'sequel'
@@ -18,3 +21,18 @@ namespace :db do
 	end
 end
 
+desc 'Run all defined tests'
+Rake::TestTask.new(name=:spec) do |t|
+	t.pattern = 'specs/*_spec.rb'
+end
+
+namespace :key do
+	require 'rbnacl/libsodium'
+	require 'base64'
+
+	desc 'Create rbnacl key'
+	task :generate do
+		key = RbNaCl::Random.random_bytes(RbNaCl::SecretBox.key_bytes)
+		puts "KEY: #{Base64.strict_encode64 key}"
+	end
+end
