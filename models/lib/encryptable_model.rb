@@ -17,7 +17,7 @@ module EncryptableModel
   end
 
   def decrypt(encrypted)
-    if document_encrypted
+    if full_url
       secret_box = RbNaCl::SecretBox.new(key)
       old_nonce = Base64.strict_decode64(nonce)
       ciphertext = Base64.strict_decode64(encrypted)

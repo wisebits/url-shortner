@@ -43,7 +43,7 @@ describe 'URL resource calls' do
   describe 'Finding existing URLs' do
     it 'HAPPY: should find an existing URL' do
     	new_url = Url.new(title: 'test23')
-      new_url.full_url = 'http://test23.com'
+      new_url.url = 'http://test23.com'
       new_url.short_url = 'http://wisebits/bfdd23'
       new_url.save
 
@@ -64,7 +64,7 @@ describe 'URL resource calls' do
     it 'HAPPY: should find list of existing URLs' do
       (1..5).each do |i|
         new_url = Url.new(title: 'test')
-        new_url.full_url = "http://test#{i}.com"
+        new_url.url = "http://test#{i}.com"
         new_url.short_url =  "http://wisebits/bfdd#{i}"
         new_url.save
       end 

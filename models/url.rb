@@ -1,6 +1,7 @@
 require 'json'
 require 'sequel'
 require 'base64'
+require_relative 'lib/encryptable_model'
 
 # properties of a short url
 class Url < Sequel::Model
@@ -12,25 +13,26 @@ class Url < Sequel::Model
   one_to_many :permissions
   one_to_many :views
 
+  # restrictions
+  set_allowed_columns :short_url, :title, :description#, :full_url
+
   def url=(plain_url)
     @url = plain_url
-    self.plain_url = encrypt(@url)
+    self.full_url = encrypt(@url)
   end
 
   def url
-    @url ||= decrypt(plain_url)
+    @url ||= decrypt(full_url)
   end
-
-  # restrictions
-  set_allowed_columns :short_url, :title, :description#, :full_url
 
   # conversion
   def to_json(options = {})
     doc = url ? Base64.strict_encode64(url) : nil
+
     JSON({  type: 'url',
             id: id,
             data: {
-              full_url: full_url,
+              full_url: doc,
               title: title,
               description: description,
               short_url: short_url,
