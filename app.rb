@@ -65,11 +65,10 @@ class UrlShortnerAPI < Sinatra::Base
     begin
       new_data = JSON.parse(request.body.read)
       full_url = new_data["full_url"]
-      new_data["short_url"] = short_url_creator(full_url)
       saved_url = Url.new(title: new_data["title"], 
-        short_url: new_data["short_url"], 
         description: new_data["description"])
       saved_url.url = full_url
+      saved_url.shorturl = saved_url.url
       saved_url.save
     rescue => e
       logger.info "Failed to create new url: #{e.inspect}"
