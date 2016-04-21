@@ -13,7 +13,7 @@ class Url < Sequel::Model
   one_to_many :views
 
   # restrictions
-  set_allowed_columns :short_url, :title, :description, :full_url
+  set_allowed_columns :short_url, :title, :description#, :full_url
 
   # conversion
   def to_json(options = {})
