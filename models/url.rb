@@ -7,10 +7,15 @@ require 'base64'
 class Url < Sequel::Model
   plugin :timestamps, :create=>:created_at, :update=>:updated_at
 
+  # relationships
   many_to_one :users
   one_to_many :permissions
   one_to_many :views
 
+  # restrictions
+  set_allowed_columns :short_url, :title, :description, :full_url
+
+  # conversion
   def to_json(options = {})
     JSON({  type: 'url',
             id: id,
@@ -23,6 +28,4 @@ class Url < Sequel::Model
           },
           options)
   end
-
-  # TODO: need to fix this function to work automatically
 end

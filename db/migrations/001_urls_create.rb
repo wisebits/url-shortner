@@ -9,6 +9,7 @@ Sequel.migration do
       String	:full_url, unique: true, null: false
       String	:short_url, unique: true, null: false, default: ''
       String	:title, null: false
+      Integer :size
       String	:description
       DateTime	:created_at
       DateTime	:updated_at
