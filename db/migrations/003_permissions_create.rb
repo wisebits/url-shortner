@@ -3,9 +3,9 @@ require 'sequel'
 Sequel.migration do	
   change do
     create_table(:permissions) do
-      primary_key	:id
+      String :id, type: :uuid, primary_key: true
       foreign_key		:url_id
-      foreign_key		:user_id
+      #foreign_key		:user_id
 
       String	:status, unique: true, null: false
       String	:description
