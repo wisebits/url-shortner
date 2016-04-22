@@ -11,7 +11,6 @@ Sequel.migration do
       String	:title, null: false
       Integer :size
       String	:description
-      String  :nonce
       DateTime	:created_at
       DateTime	:updated_at
     end

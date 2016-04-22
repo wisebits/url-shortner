@@ -5,7 +5,6 @@ Sequel.migration do
     create_table(:permissions) do
       String :id, type: :uuid, primary_key: true
       foreign_key		:url_id
-      #foreign_key		:user_id
 
       String	:status, unique: true, null: false
       String	:description

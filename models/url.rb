@@ -2,11 +2,11 @@ require 'json'
 require 'sequel'
 require 'base64'
 require 'openssl'
-require_relative 'lib/encryptable_model'
+require_relative 'lib/secure_model'
 
 # properties of a short url
 class Url < Sequel::Model
-  include EncryptableModel
+  include SecureModel
   plugin :timestamps, :create=>:created_at, :update=>:updated_at
 
   # relationships
@@ -23,17 +23,15 @@ class Url < Sequel::Model
 
   # generate the short url
   def shorturl=(full_url)
-    @short_url = "http://wise.url/"+ Base64.urlsafe_encode64(Digest::SHA256.digest(url))[0..6]
-    self.short_url = @short_url
+    self.short_url = "http://wise.url/"+ Base64.urlsafe_encode64(Digest::SHA256.digest(url))[0..6]
   end
 
   def url=(plain_url)
-    @url = plain_url
-    self.full_url = encrypt(@url)
+    self.full_url = encrypt(plain_url) if plain_url
   end
 
   def url
-    @url ||= decrypt(full_url)
+    decrypt(full_url)
   end
 
   # conversion

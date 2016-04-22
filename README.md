@@ -40,10 +40,15 @@ An URL shortner is a service that basically renders a shorter url for the one be
 > tux
 
 # an example to create a User
-> User.create(:email => "ellfae@gmail.com", :password => "testing", :account_status => "available")
+> u = User.new(:email => "ellfae@gmail.com", :username => "omarsar0")
+> u.password = "omarsar0"
+> u.save 
 
 # an example to create Url
-> Url.create(:full_url => "http://elvissaravia.com/", :title => "elvis blog", :description => "post 1")
+> u = Url.new(:title => "elvis blog")
+> u.url = "http://elvissaravia.com"
+> u.shorturl = u.url
+> u.save
 
 # an example to create Url via User
 > @u = User.first

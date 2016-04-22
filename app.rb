@@ -86,7 +86,7 @@ class UrlShortnerAPI < Sinatra::Base
         })
     rescue => e
       status 400
-      logger.info "FAILED to process GET permission request: #{e.inspect}"
+      logger.info "FAILED to process GET `d request: #{e.inspect}"
       e.inspect
     end
   end
