@@ -66,7 +66,7 @@ An URL shortner is a service that basically renders a shorter url for the one be
 * Aditya Utama Wijaya
 
 ## Relational Model
-![alt text](https://github.com/wisebits/url-shortner/blob/db_hardening/public/design_model_v2.jpg?raw=true)
+![alt text](https://github.com/wisebits/url-shortner/blob/authentication/public/design_model_v2.jpg?raw=true)
 
 ## Team: Wisebits
 ![alt text](https://avatars.githubusercontent.com/u/17720935?v=3&s=200?raw=true)
