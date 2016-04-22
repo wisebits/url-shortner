@@ -8,11 +8,15 @@ require_relative 'lib/encryptable_model'
 class Url < Sequel::Model
   include EncryptableModel
   plugin :timestamps, :create=>:created_at, :update=>:updated_at
-  
+
   # relationships
   many_to_one :users
   one_to_many :permissions
   one_to_many :views
+
+  # dependencies cleanup
+  plugin :association_dependencies, :permissions => :delete
+  plugin :association_dependencies, :views => :delete
 
   # restrictions
   set_allowed_columns :short_url, :title, :description#, :full_url

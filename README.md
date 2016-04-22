@@ -10,19 +10,30 @@ An URL shortner is a service that basically renders a shorter url for the one be
 
 ## Usage as of April 6th 2016
 
-- GET /
+- `GET /`
   - DESCRIPTION => Home of API Service
 
-- GET /api/v1/urls/
+- `GET /api/v1/urls/`
   - RETURNS => JSON
   - DESCRIPTION => Returns all saved URL details
 
-- GET /api/v1/urls/:id.json
+- `GET /api/v1/urls/:id`
   - RETURNS => JSON
-  - DESCRIPTION => Returns specified URL details
+  - DESCRIPTION => Returns specified URL details and its relationships information (e.g. permissions)
 
-- POST /api/v1/urls/
+- `GET /api/v1/urls/:id/permissions/?`
+	- RETURN => JSON
+	- DESCRIPTION => Return all permissions belonging to url
+
+- `GET /api/v1/urls/:url_id/permissions/:id/?`
+	- RETURN => JSON
+	- DESCRIPTION => Return permission with specified ID
+
+- `POST /api/v1/urls/`
   - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"full_url\": \"http://test.com\", \"title\": \"urltest\", \"description\": \"urltest\" }" \http://localhost:9292/api/v1/urls
+
+- `POST /api/v1/urls/:url_id/permissions/?`
+	- SAMPLE REQUEST => curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{ \"status\": \"urltest\", \"description\": \"urltest\" }" \http://localhost:9292/api/v1/urls/1/permissions/
 
 ## Tux helpful commands
 ``` 

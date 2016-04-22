@@ -8,6 +8,7 @@ require_relative 'config/environments'
 require_relative 'models/init'
 require_relative './helpers/api_helper.rb'
 
+
 # url shortner web application
 class UrlShortnerAPI < Sinatra::Base
 
@@ -27,32 +28,15 @@ class UrlShortnerAPI < Sinatra::Base
     JSON.pretty_generate(data: Url.all)
   end
 
-  get '/api/v1/urls/:id/*' do
-    content_type 'application/json'
-    
-    begin
-      id = params['id']
-      attribute = params['splat'][0]
-      url = Url.where(id: id).first.values#.first.instance_variable_get("@#{attribute}")
-      halt(404, 'Url not found') unless url
-      JSON.pretty_generate(data: {
-          url_id: url[:id],
-          "#{attribute}": url[:"#{attribute}"]
-        })
-    rescue
-      halt 404, "Url not found with id: #{id}"
-    end
-
-  end
-
   get '/api/v1/urls/:id' do
     content_type 'application/json'
 
     id = params[:id]
     url = Url[id]
+    permissions = url ? Url[id].permissions : []
 
     if url
-      JSON.pretty_generate(data: url)
+      JSON.pretty_generate(data: url, relationships: permissions)
     else
       halt 404, "Url not found: #{id}"
     end
@@ -78,6 +62,46 @@ class UrlShortnerAPI < Sinatra::Base
     new_location = URI.join(@request_url.to_s + '/', saved_url.id.to_s).to_s
     status 201
 
+    headers('Location' => new_location)
+  end
+
+  get '/api/v1/urls/:id/permissions/?' do
+    content_type 'application/json'
+
+    url = Url[params[:id]]
+
+    JSON.pretty_generate(data: url.permissions)
+  end
+
+  get '/api/v1/urls/:url_id/permissions/:id/?' do
+    content_type 'application/json'
+
+    begin
+      puts params[:id]
+      #doc_url = URI.join(@request_url.to_s + '/', 'document')
+      permission = Permission.where(url_id: params[:url_id], id: params[:id]).first
+      halt(404, 'Permission not found') unless permission
+      JSON.pretty_generate(data: {
+        permission: permission     
+        })
+    rescue => e
+      status 400
+      logger.info "FAILED to process GET permission request: #{e.inspect}"
+      e.inspect
+    end
+  end
+
+  post '/api/v1/urls/:url_id/permissions/?' do
+    begin
+      new_data = JSON.parse(request.body.read)
+      url = Url[params[:url_idl]]
+      saved_permission = url.add_permission(new_data)
+    rescue => e
+      logger.info "FAILED to create new permission: #{e.inspect}"
+      halt 400
+    end
+    status 201
+    new_location = URI.join(@request_url.to_s + '/', saved_config.id.to_s).to_s
     headers('Location' => new_location)
   end
 end
