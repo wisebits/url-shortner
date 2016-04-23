@@ -4,7 +4,7 @@ require 'sequel'
 # properties of a short url
 class Permission < Sequel::Model
   plugin :timestamps, :create=>:created_at, :update=>:updated_at
-  plugin :uuid, field: :id
+  plugin :uuid, :field => :id
   
   # relations
   many_to_one :urls
