@@ -30,12 +30,13 @@ describe 'URL resource calls' do
   describe 'Finding existing URLs' do
     it 'HAPPY: should find an existing URL' do
       new_url = Url.new(title: 'test23')
-      new_url.url = 'http://test23.com'
+      new_url.url = "http://test23.com"
       new_url.shorturl = new_url.url
       new_url.save
+      puts new_url.url
 
       #new_permissions = (1..3).map do |i|
-      #new_url.add_permission(status: 'testing', description: 'anything')
+        #new_url.add_permission(test)
       #end
 
       get "/api/v1/urls/#{new_url.id}"
