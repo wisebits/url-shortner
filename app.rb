@@ -94,14 +94,14 @@ class UrlShortnerAPI < Sinatra::Base
   post '/api/v1/urls/:url_id/permissions/?' do
     begin
       new_data = JSON.parse(request.body.read)
-      url = Url[params[:url_idl]]
+      url = Url[params[:url_id]]
       saved_permission = url.add_permission(new_data)
     rescue => e
       logger.info "FAILED to create new permission: #{e.inspect}"
       halt 400
     end
     status 201
-    new_location = URI.join(@request_url.to_s + '/', saved_config.id.to_s).to_s
+    new_location = URI.join(@request_url.to_s + '/', saved_permission.id.to_s).to_s
     headers('Location' => new_location)
   end
 end

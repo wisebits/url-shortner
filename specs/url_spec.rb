@@ -37,7 +37,6 @@ describe 'URL resource calls' do
 
       new_permissions = (1..3).map do |i|
         new_url.add_permission(description: "test#{i}", status: "test#{i}")
-        
       end
 
       get "/api/v1/urls/#{new_url.id}"
