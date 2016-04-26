@@ -10,12 +10,12 @@ class Url < Sequel::Model
   plugin :timestamps, :create=>:created_at, :update=>:updated_at
 
   # relationships
-  many_to_one :users
-  one_to_many :permissions
   one_to_many :views
+  many_to_one :owner, class: :User
+  many_to_many :users, class: :User, join_table: :permissions,left_key: :url_id, right_key: :viewer_id 
 
   # dependencies cleanup
-  plugin :association_dependencies, :permissions => :delete
+  #plugin :association_dependencies, :permissions => :delete
   plugin :association_dependencies, :views => :delete
 
   # restrictions

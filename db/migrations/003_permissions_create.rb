@@ -1,16 +1,20 @@
 require 'sequel'
 
-Sequel.migration do	
+Sequel.migration do 
   change do
+    #create_join_table(viewer_id: :users, url_id: :urls)
     create_table(:permissions) do
-      String :id, type: :uuid, primary_key: true
-      #primary_key :id
-      foreign_key		:url_id
+      #create_join_table(viewer_id: :users, url_id: :urls)
+      #String :id, type: :uuid, primary_key: true
+      foreign_key :url_id, :urls, null: false
+      foreign_key :viewer_id, :users, null: false
 
-      String	:status, unique: true, null: false
-      String	:description
-      DateTime	:created_at
-      DateTime	:updated_at
+      primary_key [:url_id, :viewer_id]
+      index [:viewer_id, :url_id]
+
+      String  :description
+      DateTime  :created_at
+      DateTime  :updated_at
     end
   end
 end

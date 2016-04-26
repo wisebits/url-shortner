@@ -9,10 +9,11 @@ class User < Sequel::Model
   plugin :timestamps, :create=>:created_at, :update=>:updated_at, update_on_create: true
   
   # relations
-  one_to_many :urls
+  one_to_many :owned_urls, class: :Url, key: :owner_id
+  many_to_many :urls, class: :Url, join_table: :permissions, left_key: :viewer_id, right_key: :url_id
 
   # associations
-  plugin :association_dependencies, urls: :destroy
+  plugin :association_dependencies, owned_urls: :destroy
 
   # restrictions
   set_allowed_columns :email, :account_status, :username

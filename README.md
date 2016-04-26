@@ -36,27 +36,47 @@ An URL shortner is a service that basically renders a shorter url for the one be
 	- SAMPLE REQUEST => curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{ \"status\": \"urltest\", \"description\": \"urltest\" }" \http://localhost:9292/api/v1/urls/1/permissions/
 
 ## Tux helpful commands
-``` 
-> tux
+```ruby
+tux
 
 # an example to create a User
-> u = User.new(:email => "ellfae@gmail.com", :username => "omarsar0")
-> u.password = "omarsar0"
-> u.save 
+@user = User.new(:email => "ellfae@gmail.com", :username => "omarsar0")
+@user.password = "omarsar0"
+@user.save 
 
 # an example to create Url
-> u = Url.new(:title => "elvis blog")
-> u.url = "http://elvissaravia.com"
-> u.shorturl = u.url
-> u.save
+@url = Url.new(:title => "elvis blog")
+@url.url = "http://elvissaravia.com"
+@url.shorturl = @url.url
+@url.save
 
-# an example to create Url via User
-> @u = User.first
-> @u.add_url(:full_url => "http://ibelmopan.com/", :title => "Visual Blog", :description => "just a visual blog", :short_url => "http://wisebits/ABCD")
+# set owner to url
+@user.add_owned_url(@url)
+
+# set permission for user to an url through user
+@user.add_url(@url)
+
+# set permission for user to an url through url
+@url.add_user(@user)
+
+# retrieve user who have permission to a certain url
+@user.add_url(@url)
+
+# retrieve the owner of certain url
+@user.add_url(@url)
+
+# retrieve permissions table
+Permissions.all
++--------+-----------+-------------+------------+------------+
+| url_id | viewer_id | description | created_at | updated_at |
++--------+-----------+-------------+------------+------------+
+| 1      | 1         |             |            |            |
+| 1      | 2         |             |            |            |
++--------+-----------+-------------+------------+------------+
 
 # an example to create View for Url
-> @url = Url.first
-> @url.add_view(:location => "Hsinchu, Taiwan", :ip_address => "192.168.1.1")
+@url = Url.first
+@url.add_view(:location => "Hsinchu, Taiwan", :ip_address => "192.168.1.1")
 
 ```
 
