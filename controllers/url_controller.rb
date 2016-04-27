@@ -6,7 +6,7 @@ require 'base64'
 require 'uri'
 #require_relative 'config/environments'
 #require_relative 'services/init'
-require_relative './helpers/api_helper.rb'
+#require_relative './helpers/api_helper.rb'
 
 
 # url shortner web application

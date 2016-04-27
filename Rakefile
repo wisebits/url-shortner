@@ -1,5 +1,9 @@
-require './app'
 require 'rake/testtask'
+
+Dir.glob('./{config,models,services,helpers,controllers}/init.rb').each do |file|
+  require file
+end
+#require './app'
 
 task :default => [:spec]
 
@@ -23,7 +27,7 @@ end
 
 desc 'Run all defined tests'
 Rake::TestTask.new(name=:spec) do |t|
-	t.pattern = 'specs/*_spec.rb'
+	t.pattern = 'specs/url_spec.rb'
 end
 
 namespace :key do
