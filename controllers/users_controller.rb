@@ -52,10 +52,18 @@ class UrlShortnerAPI < Sinatra::Base
       new_data = JSON.parse(request.body.read)
 
       user = User.where(username: username).first
-      saved_urls = user.add_owned_url(name: new_data[''])
+      new_url = CreateNewUrl.call(full_url: new_data['full_url'], title: new_data['title'], description: new_data['description'])
+      saved_url = user.add_owned_url(new_url)
+      saved_url.save
 
     rescue => e
-
+      logger.info "FAILED to create new url: #{e.inspect}"
+      halt 400
     end
+
+    new_location = URI.join(@request_url.to_s + '/', saved_url.id.to_s).to_s
+
+    status 201
+    headers('Location' => new_location)
   end
 end

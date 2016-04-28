@@ -31,12 +31,27 @@ An URL shortner is a service that basically renders a shorter url for the one be
 
 - `POST /api/v1/urls/`
   - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"full_url\": \"http://test.com\", \"title\": \"urltest\", \"description\": \"urltest\" }" \http://localhost:9292/api/v1/urls
+  - DESCRIPTION => Post a new url
 
 - `POST /api/v1/urls/:url_id/permissions/?`
 	- SAMPLE REQUEST => curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{ \"status\": \"urltest\", \"description\": \"urltest\" }" \http://localhost:9292/api/v1/urls/1/permissions/
+  - DESCRIPTION => Post permission for a specific url
+
+- `GET /api/v1/users/:username`
+  - RETURNS => JSON
+  - DESCRIPTION => Returns all owned urls for the specified user
+
+- `GET /api/v1/users/:username/urls/?`
+  - RETURNS => JSON
+  - DESCRIPTION => Returns all owned urls and url permitted to see for the specified user
 
 - `POST /api/v1/users/?`
   - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"username\": \"bob\", \"email\": \"bob@gmail.com\", \"password\": \"bobpass\" }" \http://localhost:9292/api/v1/users
+  - DESCRIPTION => Post a new user account
+
+- `POST /api/v1/users/:username/urls/?`
+  - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"username\": \"bob\", \"full_url\": \"http://testbob.com\", \"title\": \"urltestbob\", \"description\": \"urltestbob\" }" \http://localhost:9292/api/v1/users/bob/urls
+  - DESCRIPTION => Post url for a specific user
 
 ## Tux helpful commands
 ```ruby
@@ -93,3 +108,9 @@ Permissions.all
 
 ## Team: Wisebits
 ![alt text](https://avatars.githubusercontent.com/u/17720935?v=3&s=200?raw=true)
+
+
+@url = Url.new(:title => "bob test")
+@url.url = "http://bob.com"
+@url.shorturl = @url.url
+@url.save

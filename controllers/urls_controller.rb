@@ -36,7 +36,7 @@ class UrlShortnerAPI < Sinatra::Base
 
     begin
       new_data = JSON.parse(request.body.read)
-      new_url = CreateNewUrl.call(title: new_data["title"], description: new_data["description"])
+      new_url = CreateNewUrl.call(full_url: new_data["full_url"], title: new_data["title"], description: new_data["description"])
     rescue => e
       logger.info "Failed to create new url: #{e.inspect}"
       halt 400
