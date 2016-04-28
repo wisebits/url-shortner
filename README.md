@@ -53,6 +53,14 @@ An URL shortner is a service that basically renders a shorter url for the one be
   - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"username\": \"bob\", \"full_url\": \"http://testbob.com\", \"title\": \"urltestbob\", \"description\": \"urltestbob\" }" \http://localhost:9292/api/v1/users/bob/urls
   - DESCRIPTION => Post url for a specific user
 
+- `GET /api/v1/urls/:id/views/?`
+  - RETURN => JSON
+  - DESCRIPTION => Return all views belonging to url
+
+- `POST /api/v1/urls/:id/views/?`
+  - SAMPLE REQUEST => curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{ \"location\": \"Hsinchu-Taiwan\", \"ip_address\": \"192.168.1.1\" }" \http://localhost:9292/api/v1/urls/1/views/
+  - DESCRIPTION => Post view for a specific url
+
 ## Tux helpful commands
 ```ruby
 tux
