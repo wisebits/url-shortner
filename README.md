@@ -86,10 +86,10 @@ tux
 @url.add_user(@user)
 
 # retrieve user who have permission to a certain url
-@user.add_url(@url)
+@url.users
 
 # retrieve the owner of certain url
-@user.add_url(@url)
+@url.owner
 
 # retrieve permissions table
 Permissions.all
