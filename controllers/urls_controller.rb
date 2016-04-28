@@ -21,10 +21,10 @@ class UrlShortnerAPI < Sinatra::Base
 
     id = params[:id]
     url = Url[id]
-    #permissions = url ? Url[id].users : []
+    permissions = url ? Url[id].users : []
 
     if url
-      JSON.pretty_generate(data: url) #, relationships: permissions
+      JSON.pretty_generate(data: url, relationships: permissions)
     else
       halt 404, "Url not found: #{id}"
     end
@@ -37,13 +37,12 @@ class UrlShortnerAPI < Sinatra::Base
     begin
       new_data = JSON.parse(request.body.read)
       new_url = CreateNewUrl.call(full_url: new_data["full_url"], title: new_data["title"], description: new_data["description"])
-      saved_url = new_url['full_url']
     rescue => e
       logger.info "Failed to create new url: #{e.inspect}"
       halt 400
     end
 
-    new_location = URI.join(@request_url.to_s + '/', saved_url.to_s).to_s
+    new_location = URI.join(@request_url.to_s + '/', new_url.to_s).to_s
     status 201
 
     headers('Location' => new_location)
