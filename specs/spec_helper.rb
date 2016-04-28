@@ -17,8 +17,8 @@ def invalid_id(resource)
 	case [resource]
 	when [Url]
   	(resource.max(:id) || 0) + 1
-  when [Permission]
-  	SecureRandom.uuid
+  #when [Permission]
+  #	SecureRandom.uuid
   else
   	raise "INVALID_ID: unknown primary key for #{resource}"
   end

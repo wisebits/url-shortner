@@ -11,7 +11,7 @@ describe 'URL resource calls' do
   describe 'Creating new URLs' do
     it 'HAPPY: should create a new unique URL' do
       req_header = { 'CONTENT_TYPE' => 'application/json' }
-      req_body = { title: 'test', full_url: 'http://test.com', short_url: 'http://wisebits/bfdd' }.to_json
+      req_body = { title: 'test', full_url: 'http://test.com', description: 'testings' }.to_json
       post '/api/v1/urls/', req_body, req_header
       _(last_response.status).must_equal 201
       _(last_response.location).must_match(%r{http://})
@@ -19,7 +19,7 @@ describe 'URL resource calls' do
 
     it 'SAD: should not create URLs with duplicate names' do
       req_header = { 'CONTENT_TYPE' => 'application/json' }
-      req_body = { title: 'test', full_url: 'http://test.com', short_url: 'http://wisebits/bfdd' }.to_json
+      req_body = { title: 'test', full_url: 'http://test.com', description: 'testings' }.to_json
       post '/api/v1/urls/', req_body, req_header
       post '/api/v1/urls/', req_body, req_header
       _(last_response.status).must_equal 400
