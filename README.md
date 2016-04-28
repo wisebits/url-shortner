@@ -43,7 +43,7 @@ An URL shortner is a service that basically renders a shorter url for the one be
 
 - `GET /api/v1/users/:username/urls/?`
   - RETURNS => JSON
-  - DESCRIPTION => Returns all owned urls and url permitted to see for the specified user
+  - DESCRIPTION => Returns all owned urls and urls permitted to see for the specified user
 
 - `POST /api/v1/users/?`
   - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"username\": \"bob\", \"email\": \"bob@gmail.com\", \"password\": \"bobpass\" }" \http://localhost:9292/api/v1/users
@@ -108,9 +108,3 @@ Permissions.all
 
 ## Team: Wisebits
 ![alt text](https://avatars.githubusercontent.com/u/17720935?v=3&s=200?raw=true)
-
-
-@url = Url.new(:title => "bob test")
-@url.url = "http://bob.com"
-@url.shorturl = @url.url
-@url.save
