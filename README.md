@@ -35,6 +35,9 @@ An URL shortner is a service that basically renders a shorter url for the one be
 - `POST /api/v1/urls/:url_id/permissions/?`
 	- SAMPLE REQUEST => curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{ \"status\": \"urltest\", \"description\": \"urltest\" }" \http://localhost:9292/api/v1/urls/1/permissions/
 
+- `POST /api/v1/users/?`
+  - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"username\": \"bob\", \"email\": \"bob@gmail.com\", \"password\": \"bobpass\" }" \http://localhost:9292/api/v1/users
+
 ## Tux helpful commands
 ```ruby
 tux
