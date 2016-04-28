@@ -27,7 +27,7 @@ end
 
 desc 'Run all defined tests'
 Rake::TestTask.new(name=:spec) do |t|
-	t.pattern = 'specs/url_spec.rb'
+	t.pattern = 'specs/*_spec.rb'
 end
 
 namespace :key do

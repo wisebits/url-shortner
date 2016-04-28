@@ -24,3 +24,7 @@ def invalid_id(resource)
   end
 end
 
+def random_str(size)
+  chars = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map(&:to_a).flatten
+  chars.sample(size).join
+end
