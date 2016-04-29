@@ -4,8 +4,8 @@ require 'haml'
 require 'openssl'
 require 'base64'
 require 'uri'
-require_relative 'config/environments'
-require_relative 'models/init'
+#require_relative 'config/environments'
+#require_relative 'services/init'
 require_relative './helpers/api_helper.rb'
 
 
@@ -48,12 +48,14 @@ class UrlShortnerAPI < Sinatra::Base
 
     begin
       new_data = JSON.parse(request.body.read)
-      full_url = new_data["full_url"]
-      saved_url = Url.new(title: new_data["title"], 
-        description: new_data["description"])
-      saved_url.url = full_url
-      saved_url.shorturl = saved_url.url
-      saved_url.save
+      new_url = CreateNewUrl.call(title: new_data["title"], description: new_data["description"])
+
+      #full_url = new_data["full_url"]
+      #saved_url = Url.new(title: new_data["title"], 
+        #description: new_data["description"])
+      #saved_url.url = full_url
+      #saved_url.shorturl = saved_url.url
+      #saved_url.save
     rescue => e
       logger.info "Failed to create new url: #{e.inspect}"
       halt 400
@@ -86,7 +88,7 @@ class UrlShortnerAPI < Sinatra::Base
         })
     rescue => e
       status 400
-      logger.info "FAILED to process GET permission request: #{e.inspect}"
+      logger.info "FAILED to process GET `d request: #{e.inspect}"
       e.inspect
     end
   end
@@ -94,14 +96,14 @@ class UrlShortnerAPI < Sinatra::Base
   post '/api/v1/urls/:url_id/permissions/?' do
     begin
       new_data = JSON.parse(request.body.read)
-      url = Url[params[:url_idl]]
+      url = Url[params[:url_id]]
       saved_permission = url.add_permission(new_data)
     rescue => e
       logger.info "FAILED to create new permission: #{e.inspect}"
       halt 400
     end
     status 201
-    new_location = URI.join(@request_url.to_s + '/', saved_config.id.to_s).to_s
+    new_location = URI.join(@request_url.to_s + '/', saved_permission.id.to_s).to_s
     headers('Location' => new_location)
   end
 end
