@@ -14,10 +14,10 @@ module SecureDB
     end
   end
 
-  def self.decrypt(ciphertext_64)
+  def self.decrypt(full_url)
     if full_url
       simple_box = RbNaCl::SimpleBox.from_secret_key(key)
-      ciphertext = Base64.strict_decode64(ciphertext_64)
+      ciphertext = Base64.strict_decode64(full_url)
       simple_box.decrypt(ciphertext)
     end
   end

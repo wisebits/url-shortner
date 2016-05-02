@@ -9,30 +9,6 @@ class UrlShortnerAPI < Sinatra::Base
     JSON.pretty_generate(data: url.users)
   end
 
-  # post a new permission to url given a user id
-  post '/api/v1/urls/:url_id/permissions/:viewer_id' do
-    begin
-      user_id = params[:viewer_id]
-      url_id = params[:url_id]
-
-      user = User.where(id: user_id).first
-      url = Url.where(id: url_id).first
-
-      user.add_url(url)
-      user.save
-      
-    rescue => e
-      logger.info "FAILED to create new permission: #{e.inspect}"
-      halt 400
-    end
-
-    new_location = URI.join(@request_url.to_s + '/', user.id.to_s).to_s
-
-    status 201
-    headers('Location' => new_location)
-  end
-
-
   # TODO: permission for an url should only be viewable by ownder of the url -> move to the user controller possibly
   get '/api/v1/urls/:url_id/permissions/:id/?' do
     content_type 'application/json'

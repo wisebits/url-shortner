@@ -1,3 +1,5 @@
-require_relative 'create_new_url'
 require_relative 'create_new_user'
 require_relative 'create_new_view'
+require_relative 'create_url_for_owner'
+require_relative 'add_permission_for_url'
+require_relative 'find_all_user_urls'

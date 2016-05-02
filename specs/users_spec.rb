@@ -56,7 +56,7 @@ describe 'Testing User resource routes' do
 				password: 'mypassword')
 
 			new_urls = (1..3).map do |i|
-				CreateNewUrl.call(
+				new_user.add_owned_url(
 					title: 'test#{i}',
 					full_url: 'http://test#{i}.com',
 					description: 'Test #{i}')
@@ -82,7 +82,7 @@ describe 'Testing User resource routes' do
 		end
 	end
 
-	describe 'Creating new URL for user owner' do
+	describe 'Creating new owned URL for user owner' do
 		before do
 			@user = CreateNewUser.call(
 				username: 'wisebits',
@@ -90,10 +90,10 @@ describe 'Testing User resource routes' do
 				password: 'mypassword')
 		end
 
-		it 'HAPPY: should create a new unique URL for user' do
+		it 'HAPPY: should create a new owned URL for user' do
 			req_header = { 'CONTENT_TYPE' => 'application/json' }
 	      req_body = { title: 'test', full_url: 'http://test.com', short_url: 'http://wisebits/bfdd' }.to_json
-	      post '/api/v1/users/#{@user.username}/urls/', req_body, req_header
+	      post '/api/v1/users/#{@user.username}/owned_urls/', req_body, req_header
 	      _(last_response.status).must_equal 201
 	      _(last_response.location).must_match(%r{http://})
 		end
@@ -101,8 +101,8 @@ describe 'Testing User resource routes' do
 		it 'SAD: should not create URLs with duplicate names' do
 			req_header = { 'CONTENT_TYPE' => 'application/json' }
 	      req_body = { title: 'test', full_url: 'http://test.com', short_url: 'http://wisebits/bfdd' }.to_json
-	      post '/api/v1/users/#{@user.username}/urls/', req_body, req_header
-	      post '/api/v1/users/#{@user.username}/urls/', req_body, req_header
+	      post '/api/v1/users/#{@user.username}/owned_urls/', req_body, req_header
+	      post '/api/v1/users/#{@user.username}/owned_urls/', req_body, req_header
 	      _(last_response.status).must_equal 400
 	      _(last_response.location).must_be_nil
 		end
@@ -120,14 +120,10 @@ describe 'Testing User resource routes' do
 				password: 'mypassword')
 
 			my_urls = (1..3).map do |i|
-				CreateNewUrl.call(
+				my_user.add_owned_url(
 					title: 'test#{i}',
 					full_url: 'http://test#{i}.com',
 					description: 'Test #{i}')
-			end
-
-			my_urls.each do |url|
-				my_user.add_owned_url(url)
 			end
 
 			result = get "/api/v1/users/#{my_user.username}/urls"
