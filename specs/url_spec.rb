@@ -2,73 +2,77 @@ require_relative './spec_helper'
 
 describe 'URL resource calls' do
   before do
-    Permission.dataset.delete
-    Url.dataset.delete
-    User.dataset.delete
-    View.dataset.delete
+    Permission.dataset.destroy
+    Url.dataset.destroy
+    User.dataset.destroy
+    View.dataset.destroy
   end
 
-  describe 'Creating new URLs' do
-    it 'HAPPY: should create a new unique URL' do
-      req_header = { 'CONTENT_TYPE' => 'application/json' }
-      req_body = { title: 'test', full_url: 'http://test.com', description: 'testings' }.to_json
-      post '/api/v1/urls/', req_body, req_header
-      _(last_response.status).must_equal 201
-      _(last_response.location).must_match(%r{http://})
-    end
-
-    it 'SAD: should not create URLs with duplicate names' do
-      req_header = { 'CONTENT_TYPE' => 'application/json' }
-      req_body = { title: 'test', full_url: 'http://test.com', description: 'testings' }.to_json
-      post '/api/v1/urls/', req_body, req_header
-      post '/api/v1/urls/', req_body, req_header
-      _(last_response.status).must_equal 400
-      _(last_response.location).must_be_nil
-    end
-  end
-
-  describe 'Finding existing URLs' do
-    it 'HAPPY: should find an existing URL' do
-      new_url = Url.new(title: 'test23')
-      new_url.url = "http://test23.com"
-      new_url.shorturl = new_url.url
-      new_url.save
-      puts new_url.url
-
-      #new_permissions = (1..3).map do |i|
-        #new_url.add_permission(description: "test#{i}", status: "test#{i}")
-      #end
+  describe 'Finding existing urls' do
+    it 'HAPPY: should find an existing project' do
+      new_url = CreateUrl.call(
+          full_url: "https://aliceinwonderland.com",
+          description: "Alice in Wonderland",
+          title: "A world of wonders" 
+          )
+      new_views = (1..3).map do |i|
+        new_url.add_view(CreateView.call(location: 'Wonderland', ip_address: "1.0.0.#{i}"))
+      end
 
       get "/api/v1/urls/#{new_url.id}"
       _(last_response.status).must_equal 200
 
       results = JSON.parse(last_response.body)
       _(results['data']['id']).must_equal new_url.id
-
-     # 3.times do |i|
-       # puts new_permissions[i].id
-        #_(results['relationships'][i]['id']).must_equal new_permissions[i].id
-     # end
-    end
-
-    it 'SAD: it should not find non-existent URLs' do
-      get "/api/v1/urls/#{invalid_id(Url)}"
-      _(last_response.status).must_equal 404
+      3.times do |i|
+        _(results['relationships'][i]['id']).must_equal new_views[i].id
+      end
     end
   end
 
-  describe 'Getting an index of existing URLs' do
-    it 'HAPPY: should find list of existing URLs' do
-      (1..5).each do |i|
-        new_url = Url.new(title: 'test')
-        new_url.url = "http://test#{i}.com"
-        new_url.shorturl = new_url.url
-        new_url.save
-      end 
+  describe 'Add permission to a url' do
+    it 'HAPPY: should be able to add permission to url' do
+      owner = CreateUser.call(
+        username: 'alice',
+        email: 'alice@gmail.com',
+        password: 'mypassword')
+     
+      viewer = CreateUser.call(
+        username: 'bob',
+        email: 'bob@gmail.com',
+        password: 'mypassword')
+     
+      url = owner.add_owned_url(CreateUrl.call(
+          full_url: "https://aliceinwonderland3.com",
+          description: "Alice in Wonderland",
+          title: "A world of wonders" 
+          ))
 
-      result = get '/api/v1/urls/'
-      urls = JSON.parse(result.body)
-      _(urls['data'].count).must_equal 5
+      result = post "/api/v1/urls/#{url.id}/viewer/#{viewer.username}"
+      _(result.status).must_equal 201
+      _(viewer.urls.map(&:id)).must_include url.id
+    end
+
+    it 'BAD: should not be able to add url owner as viewer' do
+      owner = CreateUser.call(
+        username: 'alice',
+        email: 'alice@gmail.com',
+        password: 'mypassword')
+     
+      viewer = CreateUser.call(
+        username: 'bob',
+        email: 'bob@gmail.com',
+        password: 'mypassword')
+     
+      url = owner.add_owned_url(CreateUrl.call(
+          full_url: "https://aliceinwonderland3.com",
+          description: "Alice in Wonderland",
+          title: "A world of wonders" 
+          ))
+
+      result = post "/api/v1/urls/#{url.id}/viewer/#{owner.username}"
+      _(result.status).must_equal 403
+      _(owner.urls.map(&:id)).wont_include url.id
     end
   end
 end

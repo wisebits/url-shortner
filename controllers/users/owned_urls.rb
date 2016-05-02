@@ -2,6 +2,8 @@
 class UrlShortnerAPI < Sinatra::Base
 	post '/api/v1/users/:username/owned_urls/?' do
     begin
+      puts "<=="
+      puts User.all.first.username
       new_data = JSON.parse(request.body.read)
       user = User.where(username: params[:username]).first
       saved_url = CreateUrlForOwner.call(
