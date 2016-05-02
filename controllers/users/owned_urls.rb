@@ -1,9 +1,15 @@
+# url shortner web service
 class UrlShortnerAPI < Sinatra::Base
 	post '/api/v1/users/:username/owned_urls/?' do
     begin
       new_data = JSON.parse(request.body.read)
       user = User.where(username: params[:username]).first
-      saved_url = CreateUrlForOwner.call(user, full_url: new_data['full_url'], title: new_data['title'], description: new_data['description'])
+      saved_url = CreateUrlForOwner.call(
+        user: user,
+        full_url: new_data['full_url'], 
+        title: new_data['title'], 
+        description: new_data['description'])
+
       new_location = URI.join(@request_url.to_s + '/', saved_url.id.to_s).to_s
     rescue => e
       logger.info "FAILED to create new url: #{e.inspect}"

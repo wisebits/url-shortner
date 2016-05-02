@@ -11,10 +11,10 @@ require 'uri'
 
 # url shortner web service
 class UrlShortnerAPI < Sinatra::Base
-  # get '/api/v1/urls/?' do
-   # content_type 'application/json'
-  #  JSON.pretty_generate(data: Url.all)
- # end
+  get '/api/v1/urls/?' do
+    content_type 'application/json'
+    JSON.pretty_generate(data: Url.all)
+  end
 
   get '/api/v1/urls/:id' do
     content_type 'application/json'
