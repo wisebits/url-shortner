@@ -6,13 +6,12 @@ gem 'thin'
 gem 'json'
 gem 'haml'
 gem 'sequel'
-gem 'sqlite3'
 gem 'rbnacl-libsodium'
+gem 'tux'
+gem 'hirb'
 
 group :development do
   gem 'rerun'
-  gem 'tux'
-  gem 'hirb'
 end
 
 group :test do
@@ -23,5 +22,10 @@ group :test do
 end
 
 group :development, :test do
+  gem 'sqlite3'
   gem 'config_env'
+end
+
+group :production do
+	gem 'pg'
 end

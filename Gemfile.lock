@@ -14,6 +14,7 @@ GEM
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9.7)
     minitest (5.8.4)
+    pg (0.18.4)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -63,6 +64,7 @@ DEPENDENCIES
   hirb
   json
   minitest
+  pg
   rack
   rack-test
   rake
