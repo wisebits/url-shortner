@@ -16,7 +16,6 @@ class UrlShortnerAPI < Sinatra::Base
 
   # to post for users
   post '/api/v1/users/?' do
-    content_type 'application/json'
     begin
       data = JSON.parse(request.body.read)
       new_user = CreateUser.call(
