@@ -2,11 +2,9 @@ require 'json'
 require 'sequel'
 require 'base64'
 require 'openssl'
-require_relative 'lib/secure_model'
 
 # properties of a short url
 class Url < Sequel::Model
-  include SecureModel
   plugin :timestamps, :create=>:created_at, :update=>:updated_at
 
   # relationships
@@ -27,11 +25,11 @@ class Url < Sequel::Model
   end
 
   def url=(plain_url)
-    self.full_url = encrypt(plain_url) if plain_url
+    self.full_url = SecureDB.encrypt(plain_url) if plain_url
   end
 
   def url
-    decrypt(full_url)
+    SecureDB.decrypt(full_url)
   end
 
   # conversion

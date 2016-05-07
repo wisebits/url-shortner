@@ -1,5 +1,5 @@
-# Serice to save a new url
-class CreateNewUrl
+# Service to create and save a new url
+class CreateUrl
   def self.call(full_url:, title:, description:)
     saved_url = Url.new(title: title, description: description)
     saved_url.url = full_url

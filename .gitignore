@@ -1,2 +1,3 @@
 db/*.*
 config/config_env.rb
+.bundle/
