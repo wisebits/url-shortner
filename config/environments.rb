@@ -1,13 +1,14 @@
-require 'config_env'
 require 'sinatra'
 
-configure :development do 
+configure :development do
+  require 'config_env' 
   ENV['DATABASE_URL'] = 'sqlite://db/dev.db'
   require 'hirb'
   Hirb.enable
 end
 
 configure :test do
+  require 'config_env'
   ENV['DATABASE_URL'] = 'sqlite://db/test.db'
 end
 
