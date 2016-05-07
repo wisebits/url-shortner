@@ -5,6 +5,5 @@ class CreateUser
     user.email = email
     user.password = password
     user.save
-    user
   end
 end

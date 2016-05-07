@@ -3,10 +3,10 @@ require_relative './spec_helper'
 describe 'Testing User resource routes' do 
   # clean datasets
   before do
-    Permission.dataset.delete
-    Url.dataset.delete
-    User.dataset.delete
-    View.dataset.delete
+    Permission.dataset.destroy
+    Url.dataset.destroy
+    User.dataset.destroy
+    View.dataset.destroy
   end
 
   describe 'Creating new user' do
@@ -115,7 +115,6 @@ describe 'Testing User resource routes' do
         description: "Alice in Wonderland",)
       view = CreateView.call(location: 'Wonderland', ip_address: '1.0.0.1')
       url.add_view(view)
-
       # TODO: test that the view and urls were created
     end
   end
