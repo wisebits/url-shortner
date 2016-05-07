@@ -14,6 +14,7 @@ class UrlShortnerAPI < Sinatra::Base
     end
   end
 
+  # to post for users
   post '/api/v1/users/?' do
     content_type 'application/json'
     begin
