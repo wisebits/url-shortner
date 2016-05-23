@@ -23,7 +23,6 @@ configure :production do
 end
 
 configure do
-  enable :logging
   require 'sequel'
   DB = Sequel.connect(ENV['DATABASE_URL'])
 end

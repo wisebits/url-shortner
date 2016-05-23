@@ -1,9 +1,16 @@
-require 'rake/testtask'
-
 Dir.glob('./{config,lib,models,services,helpers,controllers}/init.rb').each do |file|
   require file
 end
 #require './app'
+require 'rake/testtask'
+
+namespace :deploy do
+  task :config do
+    require 'config_env/rake_tasks'
+    ConfigEnv.path_to_config("#{__dir__}/config/config_env.rb")
+    Rake::Task['deploy:config_env:heroku'].invoke
+  end
+end
 
 task :default => [:spec]
 
