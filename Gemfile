@@ -4,11 +4,12 @@ source 'https://rubygems.org'
 gem 'sinatra'
 gem 'thin'
 gem 'json'
-gem 'haml'
 gem 'sequel'
 gem 'rbnacl-libsodium'
 gem 'tux'
 gem 'hirb'
+gem 'rack-ssl-enforcer'
+gem 'jose'
 
 group :development do
   gem 'rerun'
