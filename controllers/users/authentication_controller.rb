@@ -1,18 +1,17 @@
 # Sinatra Application Controllers
 class UrlShortnerAPI < Sinatra::Base
-  get '/api/v1/users/:username/authenticate' do
+  post '/api/v1/users/authenticate' do
     content_type 'application/json'
 
-    username = params[:username]
-    password = params[:password]
-
+    credentials = JSON.parse(request.body.read)
     user = FindAndAuthenticateUser.call(
-      username: username, password: password)
+      username: credentials['username'],
+      password: credential['password'])
 
     if user
       user.to_json
     else
-      halt 401, "Account #{username} could not be authenticated"
+      halt 401, 'Account could not be authenticated'
     end
   end
 end

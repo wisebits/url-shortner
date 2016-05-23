@@ -120,6 +120,12 @@ describe 'Testing User resource routes' do
   end
 
   describe  'Authenticating an account' do
+    def login_with(username:, password:)
+      req_header = { 'CONTENT_TYPE' => 'application/json' }
+      req_body = { username: username, password: password }.to_json
+      post '/api/v1/users/authenticate', req_body, req_header
+    end
+
     before do
       @user = CreateUser.call(
         username: 'alice',
@@ -128,22 +134,22 @@ describe 'Testing User resource routes' do
     end
 
     it 'HAPPY: should be able to authenticate a real user account' do
-      get '/api/v1/users/alice/authenticate?password=mypassword'
+      login_with(username: 'alice', password: 'mypassword')
       _(last_response.status).must_equal 200
     end
 
-    it 'SAD: should not authenticate a user with a bad password' do
-      get '/api/v1/users/alice/authenticate?password=guess.password'
+    it 'SAD: should not authenticate a user with wrong password' do
+      login_with(username: 'alice', password: 'guess.password')
       _(last_response.status).must_equal 401
     end
 
-    it 'SAD: should not authenticate an account with an invalid username' do
-      get '/api/v1/users/randomuser/authenticate?password=mypassword'
+    it 'SAD: should not authenticate a user with an invalid username' do
+      login_with(username: 'randomuser', password: 'mypassword')
       _(last_response.status).must_equal 401
     end
 
     it 'BAD: should not authenticate a user without password' do
-      get '/api/v1/users/alice/authenticate'
+      login_with(username: 'alice', password: '')
       _(last_response.status).must_equal 401
     end
   end
