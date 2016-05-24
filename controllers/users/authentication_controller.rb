@@ -4,12 +4,12 @@ class UrlShortnerAPI < Sinatra::Base
     content_type 'application/json'
 
     credentials = JSON.parse(request.body.read)
-    user = FindAndAuthenticateUser.call(
+    user, auth_token = AuthenticateUser.call(
       username: credentials['username'],
-      password: credential['password'])
+      password: credentials['password'])
 
     if user
-      user.to_json
+      { user: user, auth_token: auth_token }.to_json
     else
       halt 401, 'Account could not be authenticated'
     end

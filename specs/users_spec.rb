@@ -136,6 +136,9 @@ describe 'Testing User resource routes' do
     it 'HAPPY: should be able to authenticate a real user account' do
       login_with(username: 'alice', password: 'mypassword')
       _(last_response.status).must_equal 200
+      response = JSON.parse(last_response.body)
+      _(response['user']).wont_equal nil 
+      _(response['auth_token']).wont_equal nil
     end
 
     it 'SAD: should not authenticate a user with wrong password' do
@@ -151,48 +154,6 @@ describe 'Testing User resource routes' do
     it 'BAD: should not authenticate a user without password' do
       login_with(username: 'alice', password: '')
       _(last_response.status).must_equal 401
-    end
-  end
-
-  describe 'Get index of all URLs for a user' do
-    it 'HAPPY: should find all URLs for a user' do
-      my_user = CreateUser.call(
-        username: 'alice',
-        email: 'alice@gmail.com',
-        password: 'mypassword')
-
-      other_user = CreateUser.call(
-        username: 'bob',
-        email: 'bob@gmail.com',
-        password: 'mypassword')
-
-      my_urls = []
-      3.times do |i|
-        my_urls << my_user.add_owned_url(CreateUrl.call(
-          full_url: "https://#{my_user.id}inwonderland#{i}.com",
-          description: "Alice in Wonderland",
-          title: "A world of wonders")) 
-        
-        other_user.add_owned_url(CreateUrl.call(
-          full_url: "https://#{other_user.id}inwonderland#{i}.com",
-          description: "Bob in Wonderland",
-          title: "A world of wonders"))
-      end
-
-      # Adding permission for user to another user's urls
-      other_user.owned_urls.each.with_index do |url, i|
-        my_urls << my_user.add_url(url) if i < 2
-      end
-
-      result = get "/api/v1/users/#{my_user.username}/urls"
-      _(result.status).must_equal 200
-      urls = JSON.parse(result.body)
-
-      valid_ids = my_urls.map(&:id)
-      _(urls['data'].count).must_equal 5
-      urls['data'].each do |url|
-        _(valid_ids).must_include url['id']
-      end
     end
   end
 end

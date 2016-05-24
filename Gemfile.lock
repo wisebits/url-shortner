@@ -2,13 +2,18 @@ GEM
   remote: https://rubygems.org/
   specs:
     bond (0.5.1)
+    concurrent-ruby (1.0.2)
     config_env (0.1.2)
     daemons (1.2.3)
     eventmachine (1.2.0.1)
     ffi (1.9.10)
     haml (4.0.7)
       tilt
+    hamster (3.0.0)
+      concurrent-ruby (~> 1.0)
     hirb (0.7.3)
+    jose (0.3.1)
+      hamster
     json (1.8.3)
     listen (3.1.1)
       rb-fsevent (>= 0.9.3)
@@ -63,6 +68,7 @@ DEPENDENCIES
   config_env
   haml
   hirb
+  jose
   json
   minitest
   pg
@@ -77,6 +83,9 @@ DEPENDENCIES
   sqlite3
   thin
   tux
+
+RUBY VERSION
+   ruby 2.3.1p112
 
 BUNDLED WITH
    1.12.3

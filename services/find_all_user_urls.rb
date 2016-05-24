@@ -1,8 +1,7 @@
 # FInd all urls (owned and accessible) by a user
 class FindAllUserUrls
-	def self.call(user)
-		my_urls = Url.where(owner_id: user.id).all
-      other_urls = Url.join(:permissions, url_id: :id).where(viewer_id: user.id).all
+	def self.call(username: )
+		user = User.where(username: username).first
       my_urls + other_urls
 	end
 end
