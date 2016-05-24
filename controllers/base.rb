@@ -16,9 +16,9 @@ class UrlShortnerAPI < Sinatra::Base
     (scheme =~ /^Bearer$/i) ? user_payload : nil
   end
 
-  def authorized_user?(env, username)
+  def authorized_user?(env, id)
     user = authenticated_user(env)
-    user['username'] == username
+    user['id'] == id.to_i
   rescue
     false
   end

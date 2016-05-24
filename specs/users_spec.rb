@@ -50,72 +50,44 @@ describe 'Testing User resource routes' do
   end
 
   describe 'Finding an existing user' do
-    it 'HAPPY: should find an existing user' do
-      new_user = CreateUser.call(
+    before do
+      @new_user = CreateUser.call(
         username: 'alice',
         email: 'alice@gmail.com',
         password: 'mypassword')
 
-      new_urls = (1..3).map do |i|
-        new_user.add_owned_url(CreateUrl.call(
+      @new_urls = (1..3).map do |i|
+        @new_user.add_owned_url(CreateUrl.call(
           full_url: "https://aliceinwonderland#{i}.com",
           description: "Alice in Wonderland",
           title: "A world of wonders" 
           ))
-      end  
-
-      get "/api/v1/users/#{new_user.username}"
-      _(last_response.status).must_equal 200
-
-      results = JSON.parse(last_response.body)
-     
-      _(results['data']['username']).must_equal new_user.username
-      3.times do |i|
-        _(results['relationships'][i]['id']).must_equal new_urls[i].id
       end
-    end
 
-    it 'SAD: should not find non-existent user' do
-      get "/api/v1/users/#{random_str(10)}"
-      _(last_response.status).must_equal 404
-    end
-  end
-
-  describe 'Creating new owned URL for user owner' do
-    before do
-      @user = CreateUser.call(
+      _, @auth_token = AuthenticateUser.call(
         username: 'alice',
-        email: 'alice@gmail.com',
         password: 'mypassword')
     end
-    
-    it 'HAPPY: should create a new owned URL for user' do
-      req_header = { 'CONTENT_TYPE' => 'application/json' }
-      req_body = { title: 'test', full_url: 'http://test.com', description: 'testings' }.to_json
-      post "/api/v1/users/alice/owned_urls/", req_body, req_header
-      _(last_response.status).must_equal 201
-      _(last_response.location).must_match(%r{http://})
-    end
 
-    it 'SAD: should not create URLs with duplicate names' do
-      req_header = { 'CONTENT_TYPE' => 'application/json' }
-      req_body = { title: 'test', full_url: 'http://test.com', description: 'testings' }.to_json
-      2.times do
-        post "/api/v1/users/alice/owned_urls/", req_body, req_header
+    it 'HAPPY: should find an existing user' do
+      get "/api/v1/users/#{new_user.id}", nil, { "HTTP_AUTHORIZATION" => "Bearer #{@auth_token}" }
+      _(last_response.status).must_equal 200
+
+      results = JSON.parse(last_response.body)   
+      _(results['data']['id']).must_equal new_user.id
+      3.times do |i|
+        _(results['relationships'][i]['id']).must_equal @new_urls[i].id
       end
-      _(last_response.status).must_equal 400
-      _(last_response.location).must_be_nil
     end
 
-    it 'HAPPY: should create additional information (e.g., views)' do
-      url = CreateUrlForOwner.call(
-        user: @user,
-        full_url: "https://aliceinwonderland.com",
-        title: "A world of wonders",
-        description: "Alice in Wonderland",)
-      view = CreateView.call(location: 'Wonderland', ip_address: '1.0.0.1')
-      url.add_view(view)
-      # TODO: test that the view and urls were created
+    it 'SAD: should not return wrong user' do
+      get "/api/v1/users/#{random_str(10)}", nil, { "HTTP_AUTHORIZATION" => "Bearer #{@auth_token}" }
+      _(last_response.status).must_equal 401
+    end
+
+    it 'SAD: should not return user without authorization' do
+      get "/api/v1/users/#{@new_user.id}"
+      _(last_response.status).must_equal 401
     end
   end
 

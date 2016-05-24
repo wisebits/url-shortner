@@ -1,11 +1,10 @@
 # url shortner web service
 class UrlShortnerAPI < Sinatra::Base
-	post '/api/v1/users/:username/owned_urls/?' do
+  post '/api/v1/users/:id/owned_urls/?' do
     begin
       new_data = JSON.parse(request.body.read)
-      user = User.where(username: params[:username]).first
       saved_url = CreateUrlForOwner.call(
-        user: user,
+        owner_id: params[:id],
         full_url: new_data['full_url'], 
         title: new_data['title'], 
         description: new_data['description'])
@@ -20,15 +19,14 @@ class UrlShortnerAPI < Sinatra::Base
     headers('Location' => new_location)
   end
 
-  get '/api/v1/users/:username/owned_urls/?' do
+  get '/api/v1/users/:owner_id/owned_urls/?' do
   	content_type 'application/json'
 
   	begin
-  		user = User.where(username: params[:username]).first
-  		owned_urls = user.owned_urls
-  		JSON.pretty_generate(data: owned_urls)
+  		owner = User[params[:owner_id]]
+  		JSON.pretty_generate(data: owner.owned_urls)
   	rescue => e
-  		logger.info "FAILED to find urls for user #{params[:username]}: #{e}"
+  		logger.info "FAILED to find urls for user #{params[:owner_id]}: #{e}"
   		halt 404
   	end
   end
