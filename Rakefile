@@ -1,7 +1,7 @@
 Dir.glob('./{config,lib,models,services,helpers,controllers}/init.rb').each do |file|
   require file
 end
-#require './app'
+
 require 'rake/testtask'
 
 namespace :deploy do
@@ -30,6 +30,14 @@ namespace :db do
 		Sequel::Migrator.run(DB, 'db/migrations', target: 0)
 		Sequel::Migrator.run(DB, 'db/migrations')
 	end
+
+  desc 'Populate the database with test values'
+  task :seed do
+    load './db/seeds/users_urls_views.rb'
+  end
+
+  desc 'Reset and repopulate database'
+  task :reseed => [:reset, :seed]
 end
 
 desc 'Run all defined tests'

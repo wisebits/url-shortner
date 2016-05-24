@@ -7,12 +7,19 @@ GEM
     daemons (1.2.3)
     eventmachine (1.2.0.1)
     ffi (1.9.10)
+<<<<<<< HEAD
     haml (4.0.7)
       tilt
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
     hirb (0.7.3)
     jose (0.3.1)
+=======
+    hamster (3.0.0)
+      concurrent-ruby (~> 1.0)
+    hirb (0.7.3)
+    jose (1.1.0)
+>>>>>>> 59fb2d746e6735c0b16d8e559e0def48f581363e
       hamster
     json (1.8.3)
     listen (3.1.1)
@@ -66,7 +73,6 @@ PLATFORMS
 
 DEPENDENCIES
   config_env
-  haml
   hirb
   jose
   json
