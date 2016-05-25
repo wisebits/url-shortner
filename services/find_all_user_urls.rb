@@ -2,6 +2,6 @@
 class FindAllUserUrls
 	def self.call(id: )
 		user = User.where(id: id).first
-      my_urls + other_urls
+      user.urls + user.owned_urls
 	end
 end

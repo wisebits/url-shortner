@@ -74,7 +74,7 @@ describe 'Testing User resource routes' do
       _(last_response.status).must_equal 200
 
       results = JSON.parse(last_response.body)   
-      _(results['data']['id']).must_equal new_user.id
+      _(results['data']['id']).must_equal @new_user.id
       3.times do |i|
         _(results['relationships'][i]['id']).must_equal @new_urls[i].id
       end
