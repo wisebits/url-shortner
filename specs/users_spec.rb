@@ -70,7 +70,7 @@ describe 'Testing User resource routes' do
     end
 
     it 'HAPPY: should find an existing user' do
-      get "/api/v1/users/#{new_user.id}", nil, { "HTTP_AUTHORIZATION" => "Bearer #{@auth_token}" }
+      get "/api/v1/users/#{@new_user.id}", nil, { "HTTP_AUTHORIZATION" => "Bearer #{@auth_token}" }
       _(last_response.status).must_equal 200
 
       results = JSON.parse(last_response.body)   
