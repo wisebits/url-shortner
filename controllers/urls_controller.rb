@@ -3,7 +3,7 @@ class UrlShortnerAPI < Sinatra::Base
   def affiliated_url(env, url_id)
     user = authenticated_user(env)
     all_urls = FindAllUserUrls.call(id: user['id'])
-    all_urls.select { |url| url.id == url_id.to_i }.first
+    test = all_urls.select { |url| url.id == url_id.to_i }.first
   rescue
     nil
   end
@@ -18,7 +18,7 @@ class UrlShortnerAPI < Sinatra::Base
     url_id = params[:id]
     url = affiliated_url(env, url_id)
     halt(401, 'Not authorized, or url might not exist') unless url
-    JSON.pretty_generate(data: url, relationships: views)
+    JSON.pretty_generate(data: url, relationships: url.views)
   end
 
   # post a new permission to url given a user id
