@@ -1,6 +1,7 @@
 require 'base64'
 require 'rbnacl/libsodium'
 
+# Encrypt and decrypt from database
 module SecureDB
   def self.key
     Base64.strict_decode64(ENV['DB_KEY'])

@@ -1,9 +1,16 @@
-require 'rake/testtask'
-
 Dir.glob('./{config,lib,models,services,helpers,controllers}/init.rb').each do |file|
   require file
 end
-#require './app'
+
+require 'rake/testtask'
+
+namespace :deploy do
+  task :config do
+    require 'config_env/rake_tasks'
+    ConfigEnv.path_to_config("#{__dir__}/config/config_env.rb")
+    Rake::Task['deploy:config_env:heroku'].invoke
+  end
+end
 
 task :default => [:spec]
 
@@ -23,6 +30,14 @@ namespace :db do
 		Sequel::Migrator.run(DB, 'db/migrations', target: 0)
 		Sequel::Migrator.run(DB, 'db/migrations')
 	end
+
+  desc 'Populate the database with test values'
+  task :seed do
+    load './db/seeds/users_urls_views.rb'
+  end
+
+  desc 'Reset and repopulate database'
+  task :reseed => [:reset, :seed]
 end
 
 desc 'Run all defined tests'

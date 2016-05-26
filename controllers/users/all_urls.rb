@@ -1,13 +1,14 @@
 class UrlShortnerAPI < Sinatra::Base
-	get '/api/v1/users/:username/urls/?' do
+  get '/api/v1/users/:id/urls/?' do
     content_type 'application/json'
 
     begin
-      user = User.where(username: params[:username]).first
-      all_urls = FindAllUserUrls.call(user)
+      id = params[:id]
+      halt 401 unless authorized_user?(env, id)
+      all_urls = FindAllUserUrls.call(id: id)
       JSON.pretty_generate(data: all_urls)
     rescue => e
-      logger.info "FAILED to find urls for user #{params[:username]}: #{e}"
+      logger.info "FAILED to find urls for user: #{e}"
       halt 404
     end
   end

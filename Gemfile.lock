@@ -2,13 +2,16 @@ GEM
   remote: https://rubygems.org/
   specs:
     bond (0.5.1)
+    concurrent-ruby (1.0.2)
     config_env (0.1.2)
     daemons (1.2.3)
     eventmachine (1.2.0.1)
     ffi (1.9.10)
-    haml (4.0.7)
-      tilt
+    hamster (3.0.0)
+      concurrent-ruby (~> 1.0)
     hirb (0.7.3)
+    jose (1.1.0)
+      hamster
     json (1.8.3)
     listen (3.1.1)
       rb-fsevent (>= 0.9.3)
@@ -18,6 +21,7 @@ GEM
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
+    rack-ssl-enforcer (0.2.9)
     rack-test (0.6.3)
       rack (>= 1.0)
     rake (11.1.2)
@@ -60,12 +64,13 @@ PLATFORMS
 
 DEPENDENCIES
   config_env
-  haml
   hirb
+  jose
   json
   minitest
   pg
   rack
+  rack-ssl-enforcer
   rack-test
   rake
   rbnacl-libsodium
@@ -76,5 +81,8 @@ DEPENDENCIES
   thin
   tux
 
+RUBY VERSION
+   ruby 2.3.1p112
+
 BUNDLED WITH
-   1.11.2
+   1.12.3

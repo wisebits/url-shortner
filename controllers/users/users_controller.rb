@@ -1,16 +1,17 @@
 # url shortner web service
 class UrlShortnerAPI < Sinatra::Base
-  get '/api/v1/users/:username' do
+  get '/api/v1/users/:id' do
     content_type 'application/json'
 
-    username = params[:username]
-    user = User.where(username: username).first
+    id = params[:id]
+    halt 401 unless authorized_user?(env, id)
+    user = User.where(id: id).first
 
     if user
       urls = user.owned_urls
       JSON.pretty_generate(data: user, relationships: urls)
     else
-      halt 404, "PROJECT NOT FOUND: #{username}"
+      halt 404, "URL NOT FOUND: #{id}"
     end
   end
 
