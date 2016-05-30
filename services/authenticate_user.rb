@@ -2,11 +2,11 @@
 class AuthenticateUser
   def self.call(username:, password:)
     return nil unless username && password
-    user = User.where(username: username).first
+    user = User.first(username: username)
     if user && user.password?(password)
       [user, JWE.encrypt(user)]
     else
-      false
+      nil
     end
   end
 end

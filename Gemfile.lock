@@ -1,15 +1,27 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.4.0)
     bond (0.5.1)
     concurrent-ruby (1.0.2)
     config_env (0.1.2)
     daemons (1.2.3)
+    domain_name (0.5.20160310)
+      unf (>= 0.0.5, < 1.0.0)
     eventmachine (1.2.0.1)
     ffi (1.9.10)
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
     hirb (0.7.3)
+    http (2.0.0)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 1.0.1)
+      http_parser.rb (~> 0.6.0)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
+    http-form_data (1.0.1)
+    http_parser.rb (0.6.0)
     jose (1.1.0)
       hamster
     json (1.8.3)
@@ -58,6 +70,9 @@ GEM
       ripl-multi_line (>= 0.2.4)
       ripl-rack (>= 0.2.0)
       sinatra (>= 1.2.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.2)
 
 PLATFORMS
   ruby
@@ -65,6 +80,7 @@ PLATFORMS
 DEPENDENCIES
   config_env
   hirb
+  http
   jose
   json
   minitest

@@ -11,7 +11,7 @@ class UrlShortnerAPI < Sinatra::Base
       urls = user.owned_urls
       JSON.pretty_generate(data: user, relationships: urls)
     else
-      halt 404, "URL NOT FOUND: #{id}"
+      halt 404, "USER NOT FOUND: #{id}"
     end
   end
 
