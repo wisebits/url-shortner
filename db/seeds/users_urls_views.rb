@@ -7,7 +7,7 @@ user2 = CreateUser.call(
 
 # Create url for user
 url11 = CreateUrlForOwner.call(
-  user: user1, 
+  owner_id: user1.id ,
   full_url: "https://aliceinwonderland.com",
   title: "A world of wonders",
   description: "Alice in Wonderland")
@@ -27,7 +27,7 @@ view11 = CreateViewForUrl.call(
 
 # Create url for user
 url12 = CreateUrlForOwner.call(
-  user: user1, 
+  owner_id: user1.id, 
   full_url: "https://bobinwonderland.com",
   title: "A world of wonders",
   description: "bob in Wonderland")

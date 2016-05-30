@@ -10,7 +10,7 @@ class Url < Sequel::Model
   # relationships
   one_to_many :views
   many_to_one :owner, class: :User
-  many_to_many :users, class: :User, join_table: :permissions,left_key: :url_id, right_key: :viewer_id 
+  many_to_many :base_users, class: :User, join_table: :permissions, left_key: :url_id, right_key: :viewer_id 
 
   # dependencies cleanup
   #plugin :association_dependencies, :permissions => :delete

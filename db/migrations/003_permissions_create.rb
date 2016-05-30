@@ -7,7 +7,7 @@ Sequel.migration do
       #create_join_table(viewer_id: :users, url_id: :urls)
       #String :id, type: :uuid, primary_key: true
       foreign_key :url_id, :urls, null: false
-      foreign_key :viewer_id, :users, null: false
+      foreign_key :viewer_id, :base_users, null: false
 
       primary_key [:url_id, :viewer_id]
       index [:viewer_id, :url_id]

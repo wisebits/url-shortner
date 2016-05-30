@@ -4,7 +4,7 @@ Sequel.migration do
   change do
     create_table(:urls) do
       primary_key	:id
-      foreign_key	:owner_id, :users
+      foreign_key	:owner_id, :base_users
 
       String	:full_url, unique: true, null: false
       String	:short_url, unique: true, null: false, default: ''

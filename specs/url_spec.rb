@@ -88,11 +88,7 @@ describe 'URL resource calls' do
     end
 
     it 'HAPPY: should find an existing URL' do
-      new_url = CreateUrl.call(
-          full_url: "https://aliceinwonderland.com",
-          description: "Alice in Wonderland",
-          title: "A world of wonders" 
-          )
+      new_url = @my_urls.first
       new_views = (1..3).map do |i|
         new_url.add_view(CreateView.call(location: 'Wonderland', ip_address: "1.0.0.#{i}"))
       end
