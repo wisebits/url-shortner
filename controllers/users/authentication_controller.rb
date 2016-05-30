@@ -28,8 +28,8 @@ class UrlShortnerAPI < Sinatra::Base
   get '/api/v1/github_account' do
     content_type 'application/json'
     begin
-      sso_account, auth_token = RetrieveSsoAccount.call(params['code'])
-      { account: sso_account, auth_token: auth_token }.to_json
+      sso_user, auth_token = RetrieveSsoUser.call(params['code'])
+      { user: sso_user, auth_token: auth_token }.to_json
     rescue => e 
       logger.info "FAILED to validate Github account: #{e.inspect}"
       halt 400
