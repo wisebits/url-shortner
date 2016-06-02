@@ -10,37 +10,99 @@ An URL shortner is a service that basically renders a shorter url for the one be
 
 ## Usage as of April 6th 2016
 
-- GET /
+- `GET /`
   - DESCRIPTION => Home of API Service
 
-- GET /api/v1/urls/
+- `GET /api/v1/urls/`
   - RETURNS => JSON
   - DESCRIPTION => Returns all saved URL details
 
-- GET /api/v1/urls/:id.json
+- `GET /api/v1/urls/:id`
   - RETURNS => JSON
-  - DESCRIPTION => Returns specified URL details
+  - DESCRIPTION => Returns specified URL details and its relationships information (e.g. permissions)
 
-- POST /api/v1/urls/
+- `GET /api/v1/urls/:id/permissions/?`
+	- RETURN => JSON
+	- DESCRIPTION => Return all permissions belonging to url
+
+- `GET /api/v1/urls/:url_id/permissions/:id/?`
+	- RETURN => JSON
+	- DESCRIPTION => Return permission with specified ID
+
+- `POST /api/v1/urls/`
   - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"full_url\": \"http://test.com\", \"title\": \"urltest\", \"description\": \"urltest\" }" \http://localhost:9292/api/v1/urls
+  - DESCRIPTION => Post a new url
+
+- `POST /api/v1/urls/:url_id/permissions/?`
+	- SAMPLE REQUEST => curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{ \"status\": \"urltest\", \"description\": \"urltest\" }" \http://localhost:9292/api/v1/urls/1/permissions/
+  - DESCRIPTION => Post permission for a specific url
+
+- `GET /api/v1/users/:username`
+  - RETURNS => JSON
+  - DESCRIPTION => Returns all owned urls for the specified user
+
+- `GET /api/v1/users/:username/urls/?`
+  - RETURNS => JSON
+  - DESCRIPTION => Returns all owned urls and urls permitted to see for the specified user
+
+- `POST /api/v1/users/?`
+  - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"username\": \"bob\", \"email\": \"bob@gmail.com\", \"password\": \"bobpass\" }" \http://localhost:9292/api/v1/users
+  - DESCRIPTION => Post a new user account
+
+- `POST /api/v1/users/:username/urls/?`
+  - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"username\": \"bob\", \"full_url\": \"http://testbob.com\", \"title\": \"urltestbob\", \"description\": \"urltestbob\" }" \http://localhost:9292/api/v1/users/bob/urls
+  - DESCRIPTION => Post url for a specific user
+
+- `GET /api/v1/urls/:id/views/?`
+  - RETURN => JSON
+  - DESCRIPTION => Return all views belonging to url
+
+- `POST /api/v1/urls/:id/views/?`
+  - SAMPLE REQUEST => curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{ \"location\": \"Hsinchu-Taiwan\", \"ip_address\": \"192.168.1.1\" }" \http://localhost:9292/api/v1/urls/1/views/
+  - DESCRIPTION => Post view for a specific url
 
 ## Tux helpful commands
-``` 
-> tux
+```ruby
+tux
 
 # an example to create a User
-> User.create(:email => "ellfae@gmail.com", :password => "testing", :account_status => "available")
+@user = User.new(:email => "ellfae@gmail.com", :username => "omarsar0")
+@user.password = "omarsar0"
+@user.save 
 
 # an example to create Url
-> Url.create(:full_url => "http://elvissaravia.com/", :title => "elvis blog", :description => "post 1")
+@url = Url.new(:title => "elvis blog")
+@url.url = "http://elvissaravia.com"
+@url.shorturl = @url.url
+@url.save
 
-# an example to create Url via User
-> @u = User.first
-> @u.add_url(:full_url => "http://ibelmopan.com/", :title => "Visual Blog", :description => "just a visual blog", :short_url => "http://wisebits/ABCD")
+# set owner to url
+@user.add_owned_url(@url)
+
+# set permission for user to an url through user
+@user.add_url(@url)
+
+# set permission for user to an url through url
+@url.add_user(@user)
+
+# retrieve user who have permission to a certain url
+@url.users
+
+# retrieve the owner of certain url
+@url.owner
+
+# retrieve permissions table
+Permissions.all
++--------+-----------+-------------+------------+------------+
+| url_id | viewer_id | description | created_at | updated_at |
++--------+-----------+-------------+------------+------------+
+| 1      | 1         |             |            |            |
+| 1      | 2         |             |            |            |
++--------+-----------+-------------+------------+------------+
 
 # an example to create View for Url
-> @url = Url.first
-> @url.add_view(:location => "Hsinchu, Taiwan", :ip_address => "192.168.1.1")
+@url = Url.first
+@url.add_view(:location => "Hsinchu, Taiwan", :ip_address => "192.168.1.1")
 
 ```
 
@@ -50,7 +112,7 @@ An URL shortner is a service that basically renders a shorter url for the one be
 * Aditya Utama Wijaya
 
 ## Relational Model
-![alt text](https://github.com/wisebits/url-shortner/blob/db_hardening/public/model.jpg?raw=true)
+![alt text](https://github.com/wisebits/url-shortner/blob/authentication/public/design_model_v2.jpg?raw=true)
 
 ## Team: Wisebits
 ![alt text](https://avatars.githubusercontent.com/u/17720935?v=3&s=200?raw=true)

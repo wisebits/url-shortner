@@ -1,0 +1,8 @@
+# set the following in a 'config_env.rb' file
+
+config_env :development, :test do
+  set 'DB_KEY', "***"  
+  set 'JWK256', "***"
+  set 'GH_CLIENT_ID', "***"
+  set 'GH_CLIENT_SECRET', "***"
+end
