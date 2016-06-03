@@ -92,7 +92,6 @@ describe 'URL resource calls' do
       new_views = (1..3).map do |i|
         new_url.add_view(CreateView.call(location: 'Wonderland', ip_address: "1.0.0.#{i}"))
       end
-
       _, auth_token = AuthenticateUser.call(
         username: 'alice',
         password: 'alicepassword')

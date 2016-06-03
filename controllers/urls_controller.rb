@@ -3,7 +3,7 @@ class UrlShortnerAPI < Sinatra::Base
   def affiliated_url(env, url_id)
     user = authenticated_user(env)
     all_urls = FindAllUserUrls.call(id: user['id'])
-    all_urls.select { |url| url.id == url_id.to_i }.first
+    test = all_urls.select { |url| url.id == url_id.to_i }.first
   rescue
     nil
   end
