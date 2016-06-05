@@ -10,7 +10,7 @@ class Url < Sequel::Model
   # relationships
   one_to_many :views
   many_to_one :owner, class: :User
-  many_to_many :base_users, class: :User, join_table: :permissions, left_key: :url_id, right_key: :viewer_id 
+  many_to_many :users, class: :User, join_table: :permissions, left_key: :url_id, right_key: :viewer_id 
 
   # dependencies cleanup
   #plugin :association_dependencies, :permissions => :delete
@@ -32,8 +32,30 @@ class Url < Sequel::Model
     SecureDB.decrypt(full_url)
   end
 
+  def to_full_json(options = {})
+    # this encodes the final url (needs to be reviewed)
+    full_url_final = url ? Base64.strict_encode64(url) : nil
+
+    JSON({  type: 'url',
+            id: id,
+            data: {
+              full_url: full_url_final,
+              title: title,
+              description: description,
+              short_url: short_url,
+            },
+            relationships: {
+              owner: owner,
+              viewers: users,
+              views: views 
+            }          
+        },
+        options)
+  end
+
   # conversion
   def to_json(options = {})
+    # this encodes the final url (needs to be reviewed)
     full_url_final = url ? Base64.strict_encode64(url) : nil
 
     JSON({  type: 'url',

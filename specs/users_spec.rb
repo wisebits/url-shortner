@@ -10,28 +10,43 @@ describe 'Testing User resource routes' do
   end
 
   describe 'Creating new user' do
-    it 'HAPPY: should create a new unique user' do
-    req_header = { 'CONTENT_TYPE' => 'application/json' }
-    req_body = { username: 'bob', email: 'bob@gmail.com', password: 'mypassword' }.to_json
-    post '/api/v1/users/', req_body, req_header
-    _(last_response.status).must_equal 201
-    _(last_response.location).must_match(%r{http://})
-  end
-
-  it 'SAD: should not create users with duplicate usernames' do
-    req_header = { 'CONTENT_TYPE' => 'application/json' }
-    req_body = { username: 'bob', email: 'bob@gmail.com', password: 'mypassword' }.to_json
-    post '/api/v1/users/', req_body, req_header
-    post '/api/v1/users/', req_body, req_header
-    _(last_response.status).must_equal 400
-    _(last_response.location).must_be_nil
+    before do
+      @registration_data = {
+        username: 'bob',
+        password: 'mypassword',
+        email: 'bob@gmail.com'}
+      @req_body = client_signed(@registration_data)
     end
-  end
+
+    it 'HAPPY: should create a new unique user' do
+      req_header = { 'CONTENT_TYPE' => 'application/json' }
+      post '/api/v1/users/',@req_body, req_header
+      _(last_response.status).must_equal 201
+      _(last_response.location).must_match(%r{http://})
+    end
+
+    it 'SAD: should not create users with duplicate usernames' do
+      req_header = { 'CONTENT_TYPE' => 'application/json' }
+      post '/api/v1/users/', @req_body, req_header
+      post '/api/v1/users/', @req_body, req_header
+      _(last_response.status).must_equal 400
+      _(last_response.location).must_be_nil
+      end
+    end
+
+    it 'BAD: should not create user unless requested from the authorized app' do
+      req_header = { 'CONTENT_TYPE' => 'application/json' }
+      req_body = @registration.to_json
+      post '/api/v1/users/', req_body, req_header
+      post '/api/v1/users/', req_body, req_header
+      _(last_response.status).must_equal 401
+      _(last_response.location).must_be_nil
+    end
 
   describe 'Testing unit level properties of users' do
     before do
       @original_password = 'mypassword'
-      @user = CreateUser.call(
+      @user = create_client_user(
         username: 'alice',
         email: 'alice@gmail.com',
         password: @original_password)
@@ -51,7 +66,7 @@ describe 'Testing User resource routes' do
 
   describe 'Finding an existing user' do
     before do
-      @new_user = CreateUser.call(
+      @new_user = create_client_user(
         username: 'alice',
         email: 'alice@gmail.com',
         password: 'mypassword')
@@ -64,7 +79,7 @@ describe 'Testing User resource routes' do
           ))
       end
 
-      _, @auth_token = AuthenticateUser.call(
+      @auth_token = authorized_user_token(
         username: 'alice',
         password: 'mypassword')
     end
@@ -92,14 +107,22 @@ describe 'Testing User resource routes' do
   end
 
   describe  'Authenticating an account' do
-    def login_with(username:, password:)
+    def login_with(username:, password:, client_auth: true)
       req_header = { 'CONTENT_TYPE' => 'application/json' }
-      req_body = { username: username, password: password }.to_json
+      credentials = { username: username, password: password }.to_json
+
+      if client_auth
+        app_secret_key = JOSE::JWK.from_okp([:Ed25519, Base64.decode64(ENV['APP_SECRET_KEY'])])
+        req_body = app_secret_key.sign(credentials).compact
+      else
+        req_body = nil
+      end
+
       post '/api/v1/users/authenticate', req_body, req_header
     end
 
     before do
-      @user = CreateUser.call(
+      @user = create_client_user(
         username: 'alice',
         email: 'alice@gmail.com',
         password: 'mypassword')
@@ -125,6 +148,11 @@ describe 'Testing User resource routes' do
 
     it 'BAD: should not authenticate a user without password' do
       login_with(username: 'alice', password: '')
+      _(last_response.status).must_equal 401
+    end
+
+    it 'BAD: should not authenticate valid credentials user without client app authorization' do
+      login_with(username: 'alice', password: 'mypassword', client_auth: false)
       _(last_response.status).must_equal 401
     end
   end

@@ -1,12 +1,17 @@
-# Find user account and check password
+require 'jose'
+
+# Find account and check password
 class AuthenticateUser
-  def self.call(username:, password:)
-    return nil unless username && password
-    user = User.first(username: username)
-    if user && user.password?(password)
-      [user, JWE.encrypt(user)]
-    else
-      nil
-    end
+  def self.call(signed_credentials)
+    credentials = SecureClientMessage.verified_data(signed_credentials)
+    user = User.first(username: credentials['username'])
+    raise 'Credentials not found' unless passwords_match(user, credentials)
+    [user, SecureClientMessage.encrypt(user)]
+  end
+
+  private_class_method
+
+  def self.passwords_match(user, credentials)
+    user && user.password?(credentials['password'])
   end
 end

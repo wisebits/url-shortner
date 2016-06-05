@@ -18,14 +18,13 @@ class UrlShortnerAPI < Sinatra::Base
   # to post for users
   post '/api/v1/users/?' do
     begin
-      data = JSON.parse(request.body.read)
-      new_user = CreateUser.call(
-        username: data['username'],
-        email: data['email'],
-        password: data['password'])
+      signed_full_registration = request.body.read
+      new_user = CreateUser.call(signed_full_registration)
+    rescue ClientNotAuthorized => e
+      halt 401, e.to_s
     rescue => e
-      logger.info 
-      halt 400, "failed to create new user account: #{e.inspect}"
+      logger.info "FAILED to create new account: #{e.inspect}"
+      halt 400
     end
 
     new_location = URI.join(@request_url.to_s + '/', new_user.username).to_s

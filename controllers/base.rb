@@ -12,7 +12,7 @@ class UrlShortnerAPI < Sinatra::Base
 
   def authenticated_user(env)
     scheme, auth_token = env['HTTP_AUTHORIZATION'].split(' ')
-    user_payload = JSON.load JWE.decrypt(auth_token)
+    user_payload = JSON.load SecureClientMessage.decrypt(auth_token)
     (scheme =~ /^Bearer$/i) ? user_payload : nil
   end
 
