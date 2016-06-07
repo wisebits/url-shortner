@@ -7,7 +7,7 @@ class RetrieveSsoUser
     github_user = get_github_user(access_token)
     sso_user = find_or_create_sso_user(github_user)
 
-    [sso_user, JWE.encrypt(sso_user)]
+    [sso_user, SecureClientMessage.encrypt(sso_user)]
   end
 
   private_class_method
