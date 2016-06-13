@@ -5,7 +5,7 @@ class AddPermissionForUrl
 		url = Url.where(id: url_id.to_i).first
 		if url.owner.id != viewer.id
 			viewer.add_url(url)
-			true
+			viewer
 		else
 			false
 		end

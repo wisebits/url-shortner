@@ -137,14 +137,22 @@ describe 'URL resource routes testing' do
     end
 
     it 'HAPPY: should add a viewer with permission to a url' do
-      result = post "/api/v1/urls/#{@url.id}/viewer/#{@viewer.id}", nil, @req_header
+      result = post "/api/v1/urls/#{@url.id}/viewers",
+        {email: @viewer.email}.to_json, @req_header
       _(result.status).must_equal 201
       _(@viewer.urls.map(&:id)).must_include @url.id
     end
 
+    it 'SAD: should not be able to add non-existent viewer' do
+      result = post "/api/v1/urls/#{@url.id}/viewers",
+        {email: 'hacker@gmail.com'}.to_json, @req_header
+      _(result.status).must_equal 401
+    end
+
     it 'BAD: should not be able to add url owner as viewer' do
-      result = post "/api/v1/urls/#{@url.id}/viewer/#{@owner.id}", nil, @req_header
-      _(result.status).must_equal 403
+      result = post "/api/v1/urls/#{@url.id}/viewers", 
+        {email: @owner.email}.to_json, @req_header
+      _(result.status).must_equal 401
       _(@owner.urls.map(&:id)).wont_include @url.id
     end
   end
