@@ -1,9 +1,10 @@
-# Create new view for a url
+# Service to create and save a new url view
 class CreateViewForUrl
-  def self.call(url:, ip_address:, location:)
-    saved_view = url.add_view(CreateView.call(
-      ip_address: ip_address,
-      location: location))
-    saved_view.save    
+  def self.call(url:)
+    puts "<<<<" + "passed" + ">>>>>"
+    saved_view = View.new(location: "Hsinchu, Taiwan", ip_address: "127.0.0.1")
+
+    #saved_view.save
+    #url.add_view(saved_view)
   end
 end

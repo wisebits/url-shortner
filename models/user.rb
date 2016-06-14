@@ -7,7 +7,7 @@ require 'base64'
 class BaseUser < Sequel::Model
   plugin :single_table_inheritance, :type
   plugin :timestamps, :create=>:created_at, :update=>:updated_at, update_on_create: true
-  
+
   # relations
   one_to_many :owned_urls, class: :Url, key: :owner_id
   many_to_many :urls, join_table: :permissions, left_key: :viewer_id, right_key: :url_id

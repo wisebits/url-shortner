@@ -9,7 +9,7 @@ class CreateUser
 
   def self.create_new_user(registration)
     user = User.new(username: registration['username'],
-      email: registration['email'])
+                    email: registration['email'])
     user.password = registration['password']
     user.save
   end

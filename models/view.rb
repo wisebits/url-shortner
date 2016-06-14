@@ -16,7 +16,8 @@ class View < Sequel::Model
             id: id,
             data: {
               location: location,
-              ip_address: ip_address
+              ip_address: ip_address,
+              created_at: created_at
             }
           },
           options)
