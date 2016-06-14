@@ -70,7 +70,8 @@ class Url < Sequel::Model
             },
             relationships: {
               owner: owner,
-              viewers: users
+              viewers: users, 
+              views: views
             }
           },
           options)
