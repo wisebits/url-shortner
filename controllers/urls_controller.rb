@@ -12,9 +12,31 @@ class UrlShortnerAPI < Sinatra::Base
     nil
   end
 
+  def authorized_affiliated_url_shorturl(env, shorturl, count)
+    user = authenticated_user(env)
+    all_urls = FindAllUserUrls.call(id: user['id'])
+    found_url = all_urls.select { |url| url.short_url == "#{ENV['APP_HOST']}u/"+shorturl }.first
+    
+    if found_url.owner_id != user['id'] and count
+      found_url.add_view(CreateView.call(location: 'Hsinchu, Taiwan', ip_address: "127.0.0.1"))
+    end
+    found_url
+  rescue
+    nil
+  end
+
+  # get url details by using id
   get '/api/v1/urls/:id' do
     content_type 'application/json'
     url = authorized_affiliated_url(env, params[:id], count=true)
+    halt(401, 'Not authorized, or url might not exist') unless url
+    url.to_full_json
+  end
+
+  # get url details by using shorturl
+  get '/api/v1/urls/r/:shorturl' do
+    content_type 'application/json'
+    url = authorized_affiliated_url_shorturl(env, params[:shorturl], count=true)
     halt(401, 'Not authorized, or url might not exist') unless url
     url.to_full_json
   end

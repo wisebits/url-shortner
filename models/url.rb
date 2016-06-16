@@ -23,7 +23,7 @@ class Url < Sequel::Model
 
   # generate the short url
   def shorturl=(full_url)
-    self.short_url = "http://wise.url/"+ Base64.urlsafe_encode64(Digest::SHA256.digest(url))[0..6]
+    self.short_url = "#{ENV['APP_HOST']}u/"+ Base64.urlsafe_encode64(Digest::SHA256.digest(url))[0..6]
   end
 
   def url=(plain_url)
@@ -36,7 +36,7 @@ class Url < Sequel::Model
 
   def to_full_json(options = {})
     # this encodes the final url (needs to be reviewed)
-    full_url_final = url ? Base64.strict_encode64(url) : nil
+    full_url_final = url #? Base64.strict_encode64(url) : nil
 
     JSON({  type: 'url',
             id: id,
@@ -58,7 +58,7 @@ class Url < Sequel::Model
   # conversion
   def to_json(options = {})
     # this encodes the final url (needs to be reviewed)
-    full_url_final = url ? Base64.strict_encode64(url) : nil
+    full_url_final = url #? Base64.strict_encode64(url) : nil
 
     JSON({  type: 'url',
             id: id,
